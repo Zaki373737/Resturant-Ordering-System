@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html class="scroll-smooth" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Checkout | Brewed Awakening</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+    <!-- Material Symbols -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "on-tertiary-container": "#7d8a8d",
+                        "outline": "#80756f",
+                        "surface-variant": "#f1dfd1",
+                        "on-secondary-fixed-variant": "#5a4229",
+                        "inverse-on-surface": "#ffeee0",
+                        "primary-fixed-dim": "#dbc2b3",
+                        "surface-container-highest": "#f1dfd1",
+                        "secondary": "#735a3e",
+                        "on-background": "#231a11",
+                        "tertiary-fixed": "#d8e5e9",
+                        "inverse-primary": "#dbc2b3",
+                        "on-error-container": "#93000a",
+                        "tertiary-container": "#162225",
+                        "primary-container": "#2b1d14",
+                        "tertiary-fixed-dim": "#bcc9cd",
+                        "on-primary-container": "#998377",
+                        "on-secondary-fixed": "#291803",
+                        "secondary-fixed": "#ffddbb",
+                        "on-surface-variant": "#4e453f",
+                        "surface-container": "#fdebdc",
+                        "primary-fixed": "#f8ddcf",
+                        "on-primary": "#ffffff",
+                        "on-secondary": "#ffffff",
+                        "surface-container-high": "#f7e5d7",
+                        "surface-container-lowest": "#ffffff",
+                        "on-surface": "#231a11",
+                        "on-primary-fixed": "#261910",
+                        "secondary-fixed-dim": "#e3c19f",
+                        "error-container": "#ffdad6",
+                        "background": "#fff8f4",
+                        "on-primary-fixed-variant": "#554339",
+                        "tertiary": "#010a0d",
+                        "inverse-surface": "#392f25",
+                        "on-tertiary": "#ffffff",
+                        "on-tertiary-fixed": "#111d20",
+                        "surface-tint": "#6e5a4f",
+                        "outline-variant": "#d2c4bd",
+                        "secondary-container": "#fdd9b7",
+                        "surface-container-low": "#fff1e7",
+                        "on-secondary-container": "#785e42",
+                        "surface-bright": "#fff8f4",
+                        "surface-dim": "#e8d7c9",
+                        "primary": "#100602",
+                        "surface": "#fff8f4",
+                        "on-error": "#ffffff",
+                        "error": "#ba1a1a",
+                        "on-tertiary-fixed-variant": "#3c494c",
+                        "brand-gold": "#D4AF37"
+                    },
+                    borderRadius: {
+                        DEFAULT: "0.25rem",
+                        lg: "0.5rem",
+                        xl: "0.75rem",
+                        full: "9999px"
+                    },
+                    spacing: {
+                        unit: "8px",
+                        "margin-desktop": "48px",
+                        "container-max": "1280px",
+                        gutter: "24px",
+                        "section-gap": "120px",
+                        "margin-mobile": "20px"
+                    },
+                    fontFamily: {
+                        "display-lg": ["Playfair Display"],
+                        "headline-md": ["Playfair Display"],
+                        "label-lg": ["Montserrat"],
+                        "headline-lg": ["Playfair Display"],
+                        "body-md": ["Montserrat"],
+                        "body-lg": ["Montserrat"],
+                        "body-sm": ["Montserrat"],
+                        "headline-lg-mobile": ["Playfair Display"],
+                        "label-sm": ["Montserrat"],
+                        "headline-sm": ["Playfair Display"]
+                    },
+                    fontSize: {
+                        "display-lg": ["56px", { lineHeight: "1.1", letterSpacing: "-0.02em", fontWeight: "700" }],
+                        "headline-md": ["32px", { lineHeight: "1.3", fontWeight: "600" }],
+                        "label-lg": ["14px", { lineHeight: "1", letterSpacing: "0.05em", fontWeight: "600" }],
+                        "headline-lg": ["40px", { lineHeight: "1.2", fontWeight: "700" }],
+                        "body-md": ["16px", { lineHeight: "1.6", fontWeight: "400" }],
+                        "body-lg": ["18px", { lineHeight: "1.6", fontWeight: "400" }],
+                        "body-sm": ["14px", { lineHeight: "1.5", fontWeight: "400" }],
+                        "headline-lg-mobile": ["32px", { lineHeight: "1.2", fontWeight: "700" }],
+                        "label-sm": ["12px", { lineHeight: "1", letterSpacing: "0.03em", fontWeight: "500" }],
+                        "headline-sm": ["24px", { lineHeight: "1.4", fontWeight: "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Shared Styles -->
+    <link rel="stylesheet" href="styles.css"/>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-client.js"></script>
+</head>
+<body class="bg-background text-on-background font-body-md min-h-screen flex flex-col overflow-x-hidden" data-page="checkout">
+
+<!-- ===== SHARED NAVBAR ===== -->
+<header id="main-header" class="bg-background/90 backdrop-blur-md sticky top-0 z-50 border-b border-outline-variant/20 shadow-sm">
+    <nav class="flex justify-between items-center w-full px-margin-mobile md:px-margin-desktop py-unit max-w-container-max mx-auto">
+        <a href="menu.html" class="font-display-lg text-headline-sm font-bold text-primary no-underline">Brewed Awakening</a>
+        <div class="hidden md:flex items-center gap-gutter">
+            <a id="nav-menu" class="font-label-lg text-label-lg text-on-surface-variant hover:text-primary transition-colors" href="menu.html">Menu</a>
+            <a id="nav-orders" class="font-label-lg text-label-lg text-primary border-b-2 border-secondary-fixed-dim pb-1 nav-dot" href="cart.html">Orders</a>
+        </div>
+        <div class="flex items-center gap-6">
+            <div class="hidden md:block">
+                <button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-all p-2">search</button>
+            </div>
+            <a href="cart.html" class="relative" id="cart-icon-link">
+                <button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-all p-2">shopping_bag</button>
+                <span id="cart-count" class="absolute top-1 right-1 bg-secondary text-on-secondary text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold" style="display:none;">0</span>
+            </a>
+            <a href="menu.html" class="hidden md:block bg-[#D4AF37] text-[#2B1D14] px-6 py-2 rounded-xl font-bold font-label-lg text-label-lg hover:opacity-90 active:scale-95 transition-all shadow-sm no-underline">Order Now</a>
+        </div>
+    </nav>
+</header>
+
+<main class="flex-grow w-full max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-12">
+    <!-- Breadcrumb & Title -->
+    <div class="mb-12">
+        <nav class="flex items-center text-on-surface-variant space-x-2 mb-4">
+            <a class="font-label-sm text-label-sm uppercase tracking-widest no-underline hover:text-primary" href="cart.html">Cart</a>
+            <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+            <span class="font-label-sm text-label-sm uppercase tracking-widest text-primary font-bold">Checkout</span>
+        </nav>
+        <h1 class="font-display-lg text-headline-lg md:text-display-lg text-primary-container leading-none">Complete Your Order</h1>
+        <p class="font-body-lg text-body-lg text-on-surface-variant mt-4 max-w-2xl">Enter your details below to enjoy the art of coffee delivered straight to your sanctuary.</p>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter items-start">
+        <!-- Left Column: Delivery Form -->
+        <div class="lg:col-span-7 space-y-gutter">
+            <section class="bg-surface-container-lowest p-8 md:p-10 rounded-[24px] soft-shadow border border-outline-variant/10">
+                <div class="flex items-center space-x-4 mb-10">
+                    <div class="w-12 h-12 bg-secondary-container rounded-full flex items-center justify-center text-on-secondary-container">
+                        <span class="material-symbols-outlined">local_shipping</span>
+                    </div>
+                    <h2 class="font-headline-sm text-headline-sm text-primary-container">Delivery Details</h2>
+                </div>
+                <form id="checkout-form" class="space-y-6" onsubmit="handleCheckoutSubmit(event)">
+                    <!-- Full Name -->
+                    <div class="space-y-2">
+                        <label class="font-label-lg text-label-lg text-on-surface-variant block ml-1" for="full_name">Full Name</label>
+                        <input required class="w-full bg-surface-container-low border border-outline-variant/30 rounded-[16px] px-6 py-4 font-body-md text-on-surface espresso-border-focus transition-all placeholder:text-outline-variant/60" id="full_name" placeholder="Johnathan Doe" type="text"/>
+                    </div>
+                    <!-- Phone Number -->
+                    <div class="space-y-2">
+                        <label class="font-label-lg text-label-lg text-on-surface-variant block ml-1" for="phone">Phone Number</label>
+                        <input required class="w-full bg-surface-container-low border border-outline-variant/30 rounded-[16px] px-6 py-4 font-body-md text-on-surface espresso-border-focus transition-all placeholder:text-outline-variant/60" id="phone" placeholder="+92 301 1234567" type="tel"/>
+                    </div>
+                    <!-- Delivery Address -->
+                    <div class="space-y-2">
+                        <label class="font-label-lg text-label-lg text-on-surface-variant block ml-1" for="address">Delivery Address</label>
+                        <textarea required class="w-full bg-surface-container-low border border-outline-variant/30 rounded-[16px] px-6 py-4 font-body-md text-on-surface espresso-border-focus transition-all placeholder:text-outline-variant/60 resize-none" id="address" placeholder="Street Address, Apartment, Suite, etc." rows="4"></textarea>
+                    </div>
+                    <!-- Optional Note -->
+                    <div class="space-y-2">
+                        <label class="font-label-lg text-label-lg text-on-surface-variant block ml-1" for="note">Delivery Note <span class="font-normal opacity-60 text-label-sm">(Optional)</span></label>
+                        <input class="w-full bg-surface-container-low border border-outline-variant/30 rounded-[16px] px-6 py-4 font-body-md text-on-surface espresso-border-focus transition-all placeholder:text-outline-variant/60" id="note" placeholder="Gate code, floor, leave at door..." type="text"/>
+                    </div>
+                    <!-- Hidden submit button for native HTML5 validation -->
+                    <button type="submit" id="form-submit-btn" class="hidden"></button>
+                </form>
+            </section>
+            
+            <section class="bg-surface-container-low p-8 md:p-10 rounded-[24px] border border-dashed border-outline-variant flex flex-col md:flex-row items-center justify-between gap-6">
+                <div class="flex items-center space-x-4">
+                    <span class="material-symbols-outlined text-secondary text-[32px]">verified</span>
+                    <div>
+                        <p class="font-label-lg text-label-lg text-primary font-bold">Secure Checkout</p>
+                        <p class="font-body-sm text-body-sm text-on-surface-variant">Your details are safe and secured locally.</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Right Column: Order Summary Sidebar -->
+        <div class="lg:col-span-5 sticky top-28">
+            <aside class="bg-primary-container text-on-primary-container p-8 md:p-10 rounded-[24px] shadow-xl overflow-hidden relative">
+                <div class="absolute inset-0 opacity-10 pointer-events-none mix-blend-soft-light">
+                    <div class="w-full h-full bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-white/20 to-transparent"></div>
+                </div>
+                <div class="relative z-10">
+                    <h3 class="font-headline-sm text-headline-sm mb-8 border-b border-on-primary-container/20 pb-4">Order Summary</h3>
+                    
+                    <!-- Sidebar Item List -->
+                    <div id="checkout-sidebar-list" class="space-y-6 mb-8 max-h-[320px] overflow-y-auto pr-2">
+                        <!-- Dynamically populated -->
+                    </div>
+
+                    <!-- Price Breakdown -->
+                    <div class="space-y-3 pt-6 border-t border-on-primary-container/20">
+                        <div class="flex justify-between font-label-lg text-label-lg opacity-80">
+                            <span>Subtotal</span>
+                            <span id="breakdown-subtotal">PKR 0.00</span>
+                        </div>
+                        <div class="flex justify-between font-label-lg text-label-lg opacity-80">
+                            <span>Delivery</span>
+                            <span id="breakdown-delivery">PKR 0.00</span>
+                        </div>
+                        <div class="flex justify-between font-label-lg text-label-lg opacity-80">
+                            <span>Tax (8%)</span>
+                            <span id="breakdown-tax">PKR 0.00</span>
+                        </div>
+                        <div class="flex justify-between font-headline-sm text-headline-sm text-white pt-4">
+                            <span>Total</span>
+                            <span id="breakdown-total">PKR 0.00</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Checkout Trigger Button -->
+                    <button class="w-full mt-8 bg-[#D4AF37] text-[#2B1D14] py-5 rounded-[16px] font-label-lg text-label-lg font-bold flex items-center justify-center space-x-2 hover:bg-[#C4A484] transition-all transform active:scale-95 shadow-lg" onclick="triggerFormSubmit()">
+                        <span>Proceed to Payment</span>
+                        <span class="material-symbols-outlined">arrow_forward</span>
+                    </button>
+                    <p class="mt-6 text-center font-body-sm text-body-sm opacity-60 italic">
+                        Expected delivery: 15-20 mins
+                    </p>
+                </div>
+            </aside>
+        </div>
+    </div>
+</main>
+
+<!-- ===== SHARED FOOTER ===== -->
+<footer class="bg-primary border-t border-outline-variant/10 mt-12">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-gutter px-margin-mobile md:px-margin-desktop py-section-gap max-w-container-max mx-auto text-on-primary">
+        <div class="space-y-6">
+            <div class="font-display-lg text-headline-sm text-on-primary">Brewed Awakening</div>
+            <p class="font-body-sm text-body-sm text-on-primary/70 max-w-xs">Dedicated to the pursuit of the perfect cup. We source sustainably and roast with precision.</p>
+        </div>
+        <div>
+            <h4 class="font-bold text-on-primary mb-6 font-label-lg text-label-lg">Quick Links</h4>
+            <ul class="space-y-4">
+                <li><a class="text-on-primary/70 hover:text-on-primary hover:underline transition-all font-label-sm text-label-sm" href="menu.html">Home</a></li>
+                <li><a class="text-on-primary/70 hover:text-on-primary hover:underline transition-all font-label-sm text-label-sm" href="menu.html">Menu</a></li>
+                <li><a class="text-on-primary/70 hover:text-on-primary hover:underline transition-all font-label-sm text-label-sm" href="#">Our Story</a></li>
+                <li><a class="text-on-primary/70 hover:text-on-primary hover:underline transition-all font-label-sm text-label-sm" href="#">Contact Us</a></li>
+            </ul>
+        </div>
+        <div>
+            <h4 class="font-bold text-on-primary mb-6 font-label-lg text-label-lg">Support</h4>
+            <ul class="space-y-4">
+                <li><a class="text-on-primary/70 hover:text-on-primary hover:underline transition-all font-label-sm text-label-sm" href="#">Shipping Info</a></li>
+                <li><a class="text-on-primary/70 hover:text-on-primary hover:underline transition-all font-label-sm text-label-sm" href="#">Returns &amp; Refunds</a></li>
+                <li><a class="text-on-primary/70 hover:text-on-primary hover:underline transition-all font-label-sm text-label-sm" href="#">Privacy Policy</a></li>
+                <li><a class="text-on-primary/70 hover:text-on-primary hover:underline transition-all font-label-sm text-label-sm" href="#">Terms of Service</a></li>
+            </ul>
+        </div>
+        <div>
+            <h4 class="font-bold text-on-primary mb-6 font-label-lg text-label-lg">Visit Us</h4>
+            <p class="text-on-primary/70 font-label-sm text-label-sm leading-relaxed">
+                123 Espresso Lane<br/>
+                Barista District<br/>
+                Coffee City, CC 54321
+            </p>
+            <div class="mt-4 flex items-center gap-2 text-on-primary/70">
+                <span class="material-symbols-outlined text-sm">schedule</span>
+                <span class="text-label-sm font-label-sm">7:00 AM - 8:00 PM</span>
+            </div>
+        </div>
+    </div>
+    <div class="border-t border-outline-variant/10 py-8 px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto text-center md:text-left">
+        <p class="text-on-primary/50 font-label-sm text-label-sm">&copy; 2024 Brewed Awakening. The Art of Coffee. All Rights Reserved.</p>
+    </div>
+</footer>
+
+<!-- Cart Logic -->
+<script src="cart.js"></script>
+
+<!-- Page Scripts -->
+<script>
+    function renderCheckoutSummary() {
+        const cart = getCart();
+        const list = document.getElementById('checkout-sidebar-list');
+        
+        list.innerHTML = '';
+        if (cart.length === 0) {
+            list.innerHTML = '<p class="opacity-70 italic text-sm">Your cart is empty.</p>';
+            return;
+        }
+
+        cart.forEach(item => {
+            const div = document.createElement('div');
+            div.className = "flex gap-4";
+            div.innerHTML = `
+                <div class="w-20 h-20 bg-surface-container-highest rounded-[16px] flex-shrink-0 overflow-hidden">
+                    <img class="w-full h-full object-cover" alt="${item.name}" src="${item.image}"/>
+                </div>
+                <div class="flex-grow flex flex-col justify-center">
+                    <div class="flex justify-between items-start">
+                        <p class="font-label-lg text-label-lg text-white font-bold">${item.name} x${item.quantity}</p>
+                        <p class="font-label-lg text-label-lg text-white">${formatPrice(item.price * item.quantity)}</p>
+                    </div>
+                </div>
+            `;
+            list.appendChild(div);
+        });
+
+        const totals = getCartTotal();
+        document.getElementById('breakdown-subtotal').textContent = formatPrice(totals.subtotal);
+        document.getElementById('breakdown-delivery').textContent = formatPrice(totals.deliveryFee);
+        document.getElementById('breakdown-tax').textContent = formatPrice(totals.tax);
+        document.getElementById('breakdown-total').textContent = formatPrice(totals.total);
+    }
+
+    function triggerFormSubmit() {
+        const cart = getCart();
+        if (cart.length === 0) {
+            alert('Your cart is empty! Please add items first.');
+            return;
+        }
+        document.getElementById('form-submit-btn').click();
+    }
+
+    function handleCheckoutSubmit(event) {
+        event.preventDefault();
+        const fullName = document.getElementById('full_name').value;
+        const phone = document.getElementById('phone').value;
+        const address = document.getElementById('address').value;
+        const note = document.getElementById('note').value;
+
+        saveCheckoutData({
+            name: fullName,
+            phone: phone,
+            address: address,
+            note: note
+        });
+
+        window.location.href = 'payment.html';
+    }
+
+    function populateExistingDetails() {
+        const existing = getCheckoutData();
+        if (existing.name) document.getElementById('full_name').value = existing.name;
+        if (existing.phone) document.getElementById('phone').value = existing.phone;
+        if (existing.address) document.getElementById('address').value = existing.address;
+        if (existing.note) document.getElementById('note').value = existing.note;
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        renderCheckoutSummary();
+        populateExistingDetails();
+    });
+</script>
+</body>
+</html>

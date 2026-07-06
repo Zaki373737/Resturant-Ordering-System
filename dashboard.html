@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html class="scroll-smooth" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Owner Dashboard - Brewed Awakening</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+    <!-- Material Symbols -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "on-surface-variant": "#4e453f",
+                        "surface-container": "#fdebdc",
+                        "surface-container-low": "#fff1e7",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-high": "#f7e5d7",
+                        "on-surface": "#231a11",
+                        "outline-variant": "#d2c4bd",
+                        "background": "#fff8f4",
+                        "primary": "#100602",
+                        "primary-container": "#2b1d14",
+                        "on-primary": "#ffffff",
+                        "on-primary-container": "#998377",
+                        "secondary": "#735a3e",
+                        "secondary-container": "#fdd9b7",
+                        "on-secondary-container": "#785e42",
+                        "error-container": "#ffdad6",
+                        "on-error-container": "#93000a",
+                        "brand-gold": "#D4AF37"
+                    },
+                    borderRadius: { DEFAULT: "0.25rem", lg: "0.5rem", xl: "0.75rem", full: "9999px" },
+                    spacing: { "container-max": "1280px", "margin-mobile": "20px", "margin-desktop": "48px", gutter: "24px" },
+                    fontFamily: {
+                        "display-lg": ["Playfair Display"],
+                        "headline-sm": ["Playfair Display"],
+                        "headline-lg": ["Playfair Display"],
+                        "label-lg": ["Montserrat"],
+                        "label-sm": ["Montserrat"],
+                        "body-md": ["Montserrat"],
+                        "body-sm": ["Montserrat"]
+                    },
+                    fontSize: {
+                        "headline-lg": ["40px", { lineHeight: "1.2", fontWeight: "700" }],
+                        "headline-sm": ["24px", { lineHeight: "1.4", fontWeight: "600" }],
+                        "label-lg": ["14px", { lineHeight: "1", letterSpacing: "0.05em", fontWeight: "600" }],
+                        "label-sm": ["12px", { lineHeight: "1", letterSpacing: "0.03em", fontWeight: "500" }],
+                        "body-md": ["16px", { lineHeight: "1.6", fontWeight: "400" }],
+                        "body-sm": ["14px", { lineHeight: "1.5", fontWeight: "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Shared Styles -->
+    <link rel="stylesheet" href="styles.css"/>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-client.js"></script>
+</head>
+<body class="bg-background text-on-background font-body-md min-h-screen flex flex-col">
+
+<!-- ===== HEADER ===== -->
+<header class="bg-background/90 backdrop-blur-md sticky top-0 z-50 border-b border-outline-variant/20 shadow-sm">
+    <nav class="flex justify-between items-center w-full px-margin-mobile md:px-margin-desktop py-4 max-w-container-max mx-auto">
+        <div class="flex items-center gap-2">
+            <span class="material-symbols-outlined text-brand-gold text-3xl">local_cafe</span>
+            <span class="font-display-lg text-headline-sm font-bold text-primary">Owner Dashboard</span>
+        </div>
+        <div class="flex items-center gap-3">
+            <button onclick="loadOrders()" class="flex items-center gap-1 text-on-surface-variant hover:text-primary transition-colors font-label-lg text-label-lg px-3 py-2 rounded-[12px] hover:bg-surface-container">
+                <span class="material-symbols-outlined text-xl">refresh</span>
+                <span class="hidden md:inline">Refresh</span>
+            </button>
+            <button onclick="handleLogout()" class="flex items-center gap-1 bg-primary-container text-on-primary hover:bg-primary transition-colors font-label-lg text-label-lg px-4 py-2 rounded-[12px]">
+                <span class="material-symbols-outlined text-xl">logout</span>
+                <span>Log Out</span>
+            </button>
+        </div>
+    </nav>
+</header>
+
+<main class="flex-grow w-full max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-10">
+    <div class="flex items-end justify-between mb-8 flex-wrap gap-4">
+        <div>
+            <h1 class="font-display-lg text-headline-lg text-primary">Orders</h1>
+            <p class="font-body-md text-on-surface-variant" id="orders-subtitle">Loading orders…</p>
+        </div>
+    </div>
+
+    <!-- Loading state -->
+    <div id="orders-loading" class="text-center py-20">
+        <span class="material-symbols-outlined text-4xl text-brand-gold animate-spin">progress_activity</span>
+        <p class="text-on-surface-variant mt-2">Fetching orders…</p>
+    </div>
+
+    <!-- Empty state -->
+    <div id="orders-empty" class="hidden text-center py-20">
+        <span class="material-symbols-outlined text-5xl text-on-surface-variant/40">inbox</span>
+        <p class="text-on-surface-variant mt-2">No orders yet.</p>
+    </div>
+
+    <!-- Error state -->
+    <div id="orders-error" class="hidden text-center py-20">
+        <span class="material-symbols-outlined text-5xl text-on-error-container">error</span>
+        <p class="text-on-error-container mt-2 font-semibold" id="orders-error-text">Could not load orders.</p>
+        <button onclick="loadOrders()" class="mt-4 gold-button px-6 py-2 rounded-[12px] font-label-lg text-label-lg font-bold">Try again</button>
+    </div>
+
+    <!-- Orders list -->
+    <div id="orders-list" class="grid grid-cols-1 lg:grid-cols-2 gap-gutter"></div>
+</main>
+
+<!-- Cart Logic (for formatPrice + showToast helpers) -->
+<script src="cart.js"></script>
+
+<script>
+    const STATUS_OPTIONS = ['pending', 'preparing', 'delivered', 'cancelled'];
+
+    const STATUS_STYLES = {
+        pending:    'bg-amber-100 text-amber-800 border-amber-300',
+        preparing:  'bg-blue-100 text-blue-800 border-blue-300',
+        delivered:  'bg-green-100 text-green-800 border-green-300',
+        cancelled:  'bg-red-100 text-red-800 border-red-300'
+    };
+
+    function escapeHtml(str) {
+        return String(str ?? '')
+            .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+    }
+
+    function prettyPayment(pm) {
+        if (pm === 'cash_on_delivery') return 'Cash on Delivery';
+        if (pm === 'online_payment') return 'Online Payment';
+        return pm || '—';
+    }
+
+    function formatDate(iso) {
+        if (!iso) return '';
+        try {
+            return new Date(iso).toLocaleString(undefined, {
+                month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
+            });
+        } catch {
+            return '';
+        }
+    }
+
+    // ---- Session guard: no session → straight to login ----
+    async function requireSession() {
+        if (!supabaseClient) {
+            window.location.href = 'login.html';
+            return null;
+        }
+        const { data: { session } } = await supabaseClient.auth.getSession();
+        if (!session) {
+            window.location.href = 'login.html';
+            return null;
+        }
+        return session;
+    }
+
+    // ---- Load + join orders, order_items, Menu Items (client-side) ----
+    async function loadOrders() {
+        const loading = document.getElementById('orders-loading');
+        const empty = document.getElementById('orders-empty');
+        const errorBox = document.getElementById('orders-error');
+        const list = document.getElementById('orders-list');
+        const subtitle = document.getElementById('orders-subtitle');
+
+        loading.classList.remove('hidden');
+        empty.classList.add('hidden');
+        errorBox.classList.add('hidden');
+        list.innerHTML = '';
+
+        try {
+            // Fetch the three tables in parallel, then stitch them together in JS
+            // (there are no DB-level foreign keys, so PostgREST can't auto-embed).
+            const [ordersRes, itemsRes, menuRes] = await Promise.all([
+                supabaseClient.from('orders').select('*')
+                    .order('created_at', { ascending: false, nullsFirst: false })
+                    .order('id', { ascending: false }),
+                supabaseClient.from('order_items').select('*'),
+                supabaseClient.from('Menu Items').select('id,name')
+            ]);
+
+            if (ordersRes.error) throw ordersRes.error;
+            if (itemsRes.error) throw itemsRes.error;
+            if (menuRes.error) throw menuRes.error;
+
+            const orders = ordersRes.data || [];
+            const items = itemsRes.data || [];
+            const menu = menuRes.data || [];
+
+            // menu_item_id -> item name
+            const menuNameById = {};
+            menu.forEach(m => { menuNameById[m.id] = m.name; });
+
+            // group order_items by order_id
+            const itemsByOrder = {};
+            items.forEach(it => {
+                (itemsByOrder[it.order_id] = itemsByOrder[it.order_id] || []).push(it);
+            });
+
+            loading.classList.add('hidden');
+
+            if (orders.length === 0) {
+                empty.classList.remove('hidden');
+                subtitle.textContent = '0 orders';
+                return;
+            }
+
+            subtitle.textContent = `${orders.length} order${orders.length === 1 ? '' : 's'}`;
+            orders.forEach(order => {
+                list.insertAdjacentHTML('beforeend', renderOrderCard(order, itemsByOrder[order.id] || [], menuNameById));
+            });
+        } catch (error) {
+            console.error('Failed to load orders:', error);
+            loading.classList.add('hidden');
+            document.getElementById('orders-error-text').textContent =
+                error?.message || 'Could not load orders.';
+            errorBox.classList.remove('hidden');
+        }
+    }
+
+    function renderOrderCard(order, orderItems, menuNameById) {
+        const status = order.status || 'pending';
+        const badgeClass = STATUS_STYLES[status] || STATUS_STYLES.pending;
+
+        const itemsHtml = orderItems.length
+            ? orderItems.map(it => {
+                const name = menuNameById[it.menu_item_id] || `Item #${it.menu_item_id}`;
+                return `<div class="flex justify-between text-body-sm">
+                            <span class="text-on-surface">${escapeHtml(name)} <span class="text-on-surface-variant">× ${escapeHtml(it.quantity)}</span></span>
+                            <span class="text-on-surface-variant">${formatPrice(Number(it.price_at_order) * Number(it.quantity))}</span>
+                        </div>`;
+              }).join('')
+            : `<p class="text-body-sm text-on-surface-variant italic">No line items recorded.</p>`;
+
+        const optionsHtml = STATUS_OPTIONS.map(s =>
+            `<option value="${s}" ${s === status ? 'selected' : ''}>${s.charAt(0).toUpperCase() + s.slice(1)}</option>`
+        ).join('');
+
+        const orderRef = 'BA-' + String(order.id).padStart(4, '0');
+        const dateStr = formatDate(order.created_at);
+
+        return `
+            <div class="bg-surface-container-lowest rounded-[24px] p-6 soft-shadow flex flex-col gap-4" data-order-id="${order.id}">
+                <!-- Header -->
+                <div class="flex items-start justify-between gap-3 border-b border-outline-variant/20 pb-4">
+                    <div>
+                        <span class="font-mono text-label-sm font-bold text-primary">${orderRef}</span>
+                        ${dateStr ? `<span class="block text-label-sm text-on-surface-variant/70 mt-0.5">${escapeHtml(dateStr)}</span>` : ''}
+                    </div>
+                    <span data-status-badge class="text-label-sm font-bold uppercase tracking-wider px-3 py-1 rounded-full border ${badgeClass}">${escapeHtml(status)}</span>
+                </div>
+
+                <!-- Customer -->
+                <div class="space-y-1">
+                    <div class="flex items-center gap-2 text-on-surface">
+                        <span class="material-symbols-outlined text-lg text-secondary">person</span>
+                        <span class="font-semibold">${escapeHtml(order.customer_name || 'Valued Customer')}</span>
+                    </div>
+                    <div class="flex items-center gap-2 text-body-sm text-on-surface-variant">
+                        <span class="material-symbols-outlined text-lg">call</span>
+                        <span>${escapeHtml(order.phone || '—')}</span>
+                    </div>
+                    <div class="flex items-start gap-2 text-body-sm text-on-surface-variant">
+                        <span class="material-symbols-outlined text-lg">location_on</span>
+                        <span>${escapeHtml(order.address || '—')}</span>
+                    </div>
+                    ${order.note ? `<div class="flex items-start gap-2 text-body-sm text-on-surface-variant">
+                        <span class="material-symbols-outlined text-lg">sticky_note_2</span>
+                        <span class="italic">${escapeHtml(order.note)}</span>
+                    </div>` : ''}
+                </div>
+
+                <!-- Items -->
+                <div class="bg-surface-container-low rounded-[16px] p-4 space-y-2">
+                    ${itemsHtml}
+                </div>
+
+                <!-- Footer: total + payment + status control -->
+                <div class="flex items-end justify-between gap-3 pt-2">
+                    <div>
+                        <span class="block text-label-sm text-on-surface-variant uppercase tracking-widest">Total</span>
+                        <span class="block font-display-lg text-headline-sm text-primary">${formatPrice(Number(order.total) || 0)}</span>
+                        <span class="block text-label-sm text-on-surface-variant mt-0.5">${escapeHtml(prettyPayment(order.payment_method))}</span>
+                    </div>
+                    <div class="flex flex-col gap-1.5">
+                        <label class="text-label-sm text-on-surface-variant uppercase tracking-widest ml-1">Update status</label>
+                        <select onchange="updateStatus(${order.id}, this)" data-current="${status}"
+                                class="bg-surface-container-low border border-outline-variant/40 rounded-[12px] px-3 py-2 font-body-sm focus:ring-1 focus:ring-brand-gold focus:border-brand-gold transition-all cursor-pointer">
+                            ${optionsHtml}
+                        </select>
+                    </div>
+                </div>
+            </div>`;
+    }
+
+    // ---- Update a single order's status in Supabase ----
+    async function updateStatus(orderId, selectEl) {
+        const newStatus = selectEl.value;
+        const previous = selectEl.getAttribute('data-current') || '';
+        selectEl.disabled = true;
+
+        try {
+            const { data, error } = await supabaseClient
+                .from('orders')
+                .update({ status: newStatus })
+                .eq('id', orderId)
+                .select();
+
+            if (error) throw error;
+            if (!data || data.length === 0) {
+                throw new Error('No row was updated — you may not have permission to change status.');
+            }
+
+            selectEl.setAttribute('data-current', newStatus);
+
+            // Update the status badge on this card
+            const card = document.querySelector(`[data-order-id="${orderId}"]`);
+            const badge = card?.querySelector('[data-status-badge]');
+            if (badge) {
+                badge.textContent = newStatus;
+                badge.className = `text-label-sm font-bold uppercase tracking-wider px-3 py-1 rounded-full border ${STATUS_STYLES[newStatus] || STATUS_STYLES.pending}`;
+            }
+
+            if (typeof showToast === 'function') {
+                showToast(`Order #${orderId} → ${newStatus}`);
+            }
+        } catch (error) {
+            console.error('Failed to update status:', error);
+            // Revert the dropdown to what it was
+            if (previous) selectEl.value = previous;
+            alert('Could not update status: ' + (error?.message || 'unknown error'));
+        } finally {
+            selectEl.disabled = false;
+        }
+    }
+
+    // ---- Log out ----
+    async function handleLogout() {
+        if (supabaseClient) {
+            await supabaseClient.auth.signOut();
+        }
+        window.location.href = 'login.html';
+    }
+
+    // ---- Boot ----
+    document.addEventListener('DOMContentLoaded', async () => {
+        const session = await requireSession();
+        if (!session) return; // already redirecting to login
+        loadOrders();
+    });
+</script>
+</body>
+</html>

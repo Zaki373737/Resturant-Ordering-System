@@ -1,0 +1,214 @@
+/* =========================================================
+   Brewed Awakening — Shared Styles
+   Velvet Brew Design System
+   ========================================================= */
+
+/* --- CSS Custom Properties (Design Tokens) --- */
+:root {
+    /* Core Palette */
+    --color-primary: #100602;
+    --color-on-primary: #ffffff;
+    --color-primary-container: #2b1d14;
+    --color-on-primary-container: #998377;
+    --color-inverse-primary: #dbc2b3;
+
+    --color-secondary: #735a3e;
+    --color-on-secondary: #ffffff;
+    --color-secondary-container: #fdd9b7;
+    --color-on-secondary-container: #785e42;
+
+    --color-tertiary: #010a0d;
+    --color-on-tertiary: #ffffff;
+    --color-tertiary-container: #162225;
+    --color-on-tertiary-container: #7d8a8d;
+
+    --color-error: #ba1a1a;
+    --color-on-error: #ffffff;
+    --color-error-container: #ffdad6;
+    --color-on-error-container: #93000a;
+
+    --color-background: #fff8f4;
+    --color-on-background: #231a11;
+    --color-surface: #fff8f4;
+    --color-on-surface: #231a11;
+    --color-on-surface-variant: #4e453f;
+
+    --color-surface-variant: #f1dfd1;
+    --color-surface-dim: #e8d7c9;
+    --color-surface-bright: #fff8f4;
+    --color-surface-container-lowest: #ffffff;
+    --color-surface-container-low: #fff1e7;
+    --color-surface-container: #fdebdc;
+    --color-surface-container-high: #f7e5d7;
+    --color-surface-container-highest: #f1dfd1;
+
+    --color-inverse-surface: #392f25;
+    --color-inverse-on-surface: #ffeee0;
+    --color-surface-tint: #6e5a4f;
+
+    --color-outline: #80756f;
+    --color-outline-variant: #d2c4bd;
+
+    --color-primary-fixed: #f8ddcf;
+    --color-primary-fixed-dim: #dbc2b3;
+    --color-on-primary-fixed: #261910;
+    --color-on-primary-fixed-variant: #554339;
+
+    --color-secondary-fixed: #ffddbb;
+    --color-secondary-fixed-dim: #e3c19f;
+    --color-on-secondary-fixed: #291803;
+    --color-on-secondary-fixed-variant: #5a4229;
+
+    --color-tertiary-fixed: #d8e5e9;
+    --color-tertiary-fixed-dim: #bcc9cd;
+    --color-on-tertiary-fixed: #111d20;
+    --color-on-tertiary-fixed-variant: #3c494c;
+
+    /* Brand Accent */
+    --color-brand-gold: #D4AF37;
+    --color-brand-gold-hover: #C4A484;
+    --color-espresso-brown: #2B1D14;
+
+    /* Typography */
+    --font-display: 'Playfair Display', serif;
+    --font-body: 'Montserrat', sans-serif;
+
+    /* Spacing */
+    --spacing-unit: 8px;
+    --spacing-gutter: 24px;
+    --spacing-margin-mobile: 20px;
+    --spacing-margin-desktop: 48px;
+    --spacing-section-gap: 120px;
+    --container-max: 1280px;
+
+    /* Shadows */
+    --shadow-ambient: 0 24px 48px -12px rgba(43, 29, 20, 0.08);
+    --shadow-soft: 0 10px 30px -10px rgba(43, 29, 20, 0.08);
+    --shadow-elevated: 0 20px 40px -15px rgba(43, 29, 20, 0.12);
+}
+
+/* --- Base Reset & Globals --- */
+.material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    vertical-align: middle;
+}
+
+/* --- Custom Scrollbar --- */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: var(--color-surface-container); }
+::-webkit-scrollbar-thumb { background: var(--color-primary-fixed-dim); border-radius: 10px; }
+
+/* --- Shared Component Shadows --- */
+.ambient-shadow {
+    box-shadow: var(--shadow-ambient);
+}
+.soft-shadow {
+    box-shadow: var(--shadow-ambient);
+}
+.custom-shadow {
+    box-shadow: var(--shadow-soft);
+}
+
+/* --- Gold Button --- */
+.gold-button {
+    background-color: var(--color-brand-gold);
+    color: var(--color-espresso-brown);
+    transition: all 0.3s ease-in-out;
+}
+.gold-button:hover {
+    background-color: var(--color-brand-gold-hover);
+    transform: translateY(-2px);
+}
+
+/* --- Glass Card --- */
+.glass-card {
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(8px);
+}
+
+/* --- Espresso Focus --- */
+.espresso-border-focus:focus {
+    border-color: var(--color-primary-container);
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(43, 29, 20, 0.1);
+}
+
+/* --- Nav Active Dot --- */
+.nav-dot::after {
+    content: '';
+    display: block;
+    width: 4px;
+    height: 4px;
+    background: var(--color-brand-gold);
+    border-radius: 50%;
+    margin: 4px auto 0;
+}
+
+/* --- Selected Border (Payment) --- */
+.selected-border {
+    border: 2px solid var(--color-brand-gold);
+}
+
+/* --- Toast Notification --- */
+.toast-notification {
+    position: fixed;
+    bottom: 32px;
+    right: 32px;
+    background: var(--color-primary-container);
+    color: var(--color-on-primary);
+    padding: 16px 24px;
+    border-radius: 16px;
+    font-family: var(--font-body);
+    font-size: 14px;
+    font-weight: 600;
+    box-shadow: var(--shadow-elevated);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transform: translateY(100px);
+    opacity: 0;
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.toast-notification.show {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+/* --- Confirmation Overlay --- */
+.order-confirmation-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(43, 29, 20, 0.6);
+    backdrop-filter: blur(8px);
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s ease;
+}
+.order-confirmation-overlay.active {
+    opacity: 1;
+    pointer-events: all;
+}
+.order-confirmation-card {
+    background: var(--color-surface-container-lowest);
+    border-radius: 24px;
+    padding: 48px;
+    max-width: 480px;
+    width: 90%;
+    text-align: center;
+    box-shadow: var(--shadow-elevated);
+    transform: scale(0.9) translateY(20px);
+    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.order-confirmation-overlay.active .order-confirmation-card {
+    transform: scale(1) translateY(0);
+}
+
+/* --- Espresso Overlay Gradient --- */
+.espresso-overlay {
+    background: linear-gradient(to bottom, transparent, rgba(43, 29, 20, 0.02));
+}

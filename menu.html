@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html class="scroll-smooth" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Brewed Awakening | Our Menu</title>
+    <meta name="description" content="Explore the artisanal menu at Brewed Awakening. Handcrafted coffees, pastries, and cold drinks made with passion."/>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+    <!-- Material Symbols -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "on-tertiary-container": "#7d8a8d",
+                        "outline": "#80756f",
+                        "surface-variant": "#f1dfd1",
+                        "on-secondary-fixed-variant": "#5a4229",
+                        "inverse-on-surface": "#ffeee0",
+                        "primary-fixed-dim": "#dbc2b3",
+                        "surface-container-highest": "#f1dfd1",
+                        "secondary": "#735a3e",
+                        "on-background": "#231a11",
+                        "tertiary-fixed": "#d8e5e9",
+                        "inverse-primary": "#dbc2b3",
+                        "on-error-container": "#93000a",
+                        "tertiary-container": "#162225",
+                        "primary-container": "#2b1d14",
+                        "tertiary-fixed-dim": "#bcc9cd",
+                        "on-primary-container": "#998377",
+                        "on-secondary-fixed": "#291803",
+                        "secondary-fixed": "#ffddbb",
+                        "on-surface-variant": "#4e453f",
+                        "surface-container": "#fdebdc",
+                        "primary-fixed": "#f8ddcf",
+                        "on-primary": "#ffffff",
+                        "on-secondary": "#ffffff",
+                        "surface-container-high": "#f7e5d7",
+                        "surface-container-lowest": "#ffffff",
+                        "on-surface": "#231a11",
+                        "on-primary-fixed": "#261910",
+                        "secondary-fixed-dim": "#e3c19f",
+                        "error-container": "#ffdad6",
+                        "background": "#fff8f4",
+                        "on-primary-fixed-variant": "#554339",
+                        "tertiary": "#010a0d",
+                        "inverse-surface": "#392f25",
+                        "on-tertiary": "#ffffff",
+                        "on-tertiary-fixed": "#111d20",
+                        "surface-tint": "#6e5a4f",
+                        "outline-variant": "#d2c4bd",
+                        "secondary-container": "#fdd9b7",
+                        "surface-container-low": "#fff1e7",
+                        "on-secondary-container": "#785e42",
+                        "surface-bright": "#fff8f4",
+                        "surface-dim": "#e8d7c9",
+                        "primary": "#100602",
+                        "surface": "#fff8f4",
+                        "on-error": "#ffffff",
+                        "error": "#ba1a1a",
+                        "on-tertiary-fixed-variant": "#3c494c",
+                        "brand-gold": "#D4AF37"
+                    },
+                    borderRadius: {
+                        DEFAULT: "0.25rem",
+                        lg: "0.5rem",
+                        xl: "0.75rem",
+                        full: "9999px"
+                    },
+                    spacing: {
+                        unit: "8px",
+                        "margin-desktop": "48px",
+                        "container-max": "1280px",
+                        gutter: "24px",
+                        "section-gap": "120px",
+                        "margin-mobile": "20px"
+                    },
+                    fontFamily: {
+                        "display-lg": ["Playfair Display"],
+                        "headline-md": ["Playfair Display"],
+                        "label-lg": ["Montserrat"],
+                        "headline-lg": ["Playfair Display"],
+                        "body-md": ["Montserrat"],
+                        "body-lg": ["Montserrat"],
+                        "body-sm": ["Montserrat"],
+                        "headline-lg-mobile": ["Playfair Display"],
+                        "label-sm": ["Montserrat"],
+                        "headline-sm": ["Playfair Display"]
+                    },
+                    fontSize: {
+                        "display-lg": ["56px", { lineHeight: "1.1", letterSpacing: "-0.02em", fontWeight: "700" }],
+                        "headline-md": ["32px", { lineHeight: "1.3", fontWeight: "600" }],
+                        "label-lg": ["14px", { lineHeight: "1", letterSpacing: "0.05em", fontWeight: "600" }],
+                        "headline-lg": ["40px", { lineHeight: "1.2", fontWeight: "700" }],
+                        "body-md": ["16px", { lineHeight: "1.6", fontWeight: "400" }],
+                        "body-lg": ["18px", { lineHeight: "1.6", fontWeight: "400" }],
+                        "body-sm": ["14px", { lineHeight: "1.5", fontWeight: "400" }],
+                        "headline-lg-mobile": ["32px", { lineHeight: "1.2", fontWeight: "700" }],
+                        "label-sm": ["12px", { lineHeight: "1", letterSpacing: "0.03em", fontWeight: "500" }],
+                        "headline-sm": ["24px", { lineHeight: "1.4", fontWeight: "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Shared Styles -->
+    <link rel="stylesheet" href="styles.css"/>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-client.js"></script>
+</head>
+<body class="bg-background text-on-surface selection:bg-secondary-fixed selection:text-on-secondary-fixed font-body-md overflow-x-hidden" data-page="menu">
+
+<!-- ===== SHARED NAVBAR ===== -->
+<header id="main-header" class="bg-background/90 backdrop-blur-md sticky top-0 z-50 border-b border-outline-variant/20 shadow-sm">
+    <nav class="flex justify-between items-center w-full px-margin-mobile md:px-margin-desktop py-unit max-w-container-max mx-auto">
+        <a href="menu.html" class="font-display-lg text-headline-sm font-bold text-primary no-underline">Brewed Awakening</a>
+        <div class="hidden md:flex items-center gap-gutter">
+            <a id="nav-menu" class="font-label-lg text-label-lg text-primary border-b-2 border-secondary-fixed-dim pb-1 nav-dot" href="menu.html">Menu</a>
+            <a id="nav-orders" class="font-label-lg text-label-lg text-on-surface-variant hover:text-primary transition-colors" href="cart.html">Orders</a>
+        </div>
+        <div class="flex items-center gap-6">
+            <div class="hidden md:block">
+                <button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-all p-2">search</button>
+            </div>
+            <a href="cart.html" class="relative" id="cart-icon-link">
+                <button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-all p-2" onclick="window.location.href='cart.html'">shopping_bag</button>
+                <span id="cart-count" class="absolute top-1 right-1 bg-secondary text-on-secondary text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold" style="display:none;">0</span>
+            </a>
+            <a href="menu.html" class="hidden md:block bg-[#D4AF37] text-[#2B1D14] px-6 py-2 rounded-xl font-bold font-label-lg text-label-lg hover:opacity-90 active:scale-95 transition-all shadow-sm no-underline">Order Now</a>
+        </div>
+    </nav>
+</header>
+
+<!-- Hero Section -->
+<section class="relative h-[614px] md:h-[716px] flex items-center justify-center overflow-hidden">
+    <div class="absolute inset-0 z-0">
+        <div class="w-full h-full bg-cover bg-center transition-transform duration-1000 hover:scale-105" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDDDE3xnLiCpnKpXSBgLHj-LeFQGntDTCBVdk4wqfDcY0nNt1_ohuREYiFW-6yYG5cwqJk2SRKw2b5SxAfQjeD2jCsByZlc3z6yrT_YOYf9t_Q2aGHo-KURwoOLokHeSX_4cZAlWjMYbS1NVhQHuxqPqBD0j3lRfpjsSnCeQ9nhg7vOx2WVB40__4kymRTMK39no2EE7OAEle4grC3UnvtVHyoy0cT0tP6dGfMbGilclBDDR55RFaOEvQ')"></div>
+        <div class="absolute inset-0 bg-primary/20 backdrop-brightness-75"></div>
+    </div>
+    <div class="relative z-10 text-center px-margin-mobile md:px-0">
+        <h1 class="font-display-lg text-display-lg text-on-primary mb-4 drop-shadow-lg">Our Menu</h1>
+        <p class="font-body-lg text-body-lg text-on-primary max-w-lg mx-auto opacity-90 italic">Crafted with passion, served with love.</p>
+        <div class="mt-10 animate-bounce">
+            <span class="material-symbols-outlined text-on-primary text-4xl">keyboard_arrow_down</span>
+        </div>
+    </div>
+</section>
+
+<!-- Category Tabs -->
+<section class="py-margin-desktop bg-surface-container-low sticky top-[64px] z-40 border-b border-outline-variant/10">
+    <div class="max-w-container-max mx-auto px-margin-desktop">
+        <div class="flex justify-center space-x-2 md:space-x-8" id="category-tabs">
+            <button data-filter="coffee" class="px-6 py-3 rounded-full bg-secondary-fixed text-on-secondary-fixed font-bold font-label-lg text-label-lg shadow-sm transition-all border border-transparent">Coffee</button>
+            <button data-filter="pastries" class="px-6 py-3 rounded-full bg-transparent text-on-surface-variant hover:bg-surface-container-high font-medium font-label-lg text-label-lg transition-all border border-outline-variant/30">Pastries</button>
+            <button data-filter="cold-drinks" class="px-6 py-3 rounded-full bg-transparent text-on-surface-variant hover:bg-surface-container-high font-medium font-label-lg text-label-lg transition-all border border-outline-variant/30">Cold Drinks</button>
+        </div>
+    </div>
+</section>
+
+<!-- Product Grid -->
+<main class="max-w-container-max mx-auto px-margin-desktop py-section-gap">
+    <section id="product-grid" class="space-y-16">
+        <div id="coffee-section" data-category="coffee" class="space-y-6">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="font-display-lg text-headline-lg text-primary">Coffee</h2>
+                <span class="text-sm uppercase tracking-[0.2em] text-on-surface-variant">Loading...</span>
+            </div>
+            <div id="coffee-items" class="grid grid-cols-1 md:grid-cols-2 gap-gutter"></div>
+        </div>
+
+        <div id="pastries-section" data-category="pastries" class="space-y-6 hidden">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="font-display-lg text-headline-lg text-primary">Pastries</h2>
+                <span class="text-sm uppercase tracking-[0.2em] text-on-surface-variant">Loading...</span>
+            </div>
+            <div id="pastries-items" class="grid grid-cols-1 md:grid-cols-2 gap-gutter"></div>
+        </div>
+
+        <div id="cold-drinks-section" data-category="cold-drinks" class="space-y-6 hidden">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="font-display-lg text-headline-lg text-primary">Cold Drinks</h2>
+                <span class="text-sm uppercase tracking-[0.2em] text-on-surface-variant">Loading...</span>
+            </div>
+            <div id="cold-drinks-items" class="grid grid-cols-1 md:grid-cols-2 gap-gutter"></div>
+        </div>
+    </section>
+</main>
+
+<!-- Call to Action / Promo -->
+<section class="bg-primary-container py-section-gap">
+    <div class="max-w-container-max mx-auto px-margin-desktop text-center">
+        <div class="max-w-2xl mx-auto">
+            <span class="text-secondary font-bold tracking-widest text-label-sm uppercase mb-6 block">Join the movement</span>
+            <h2 class="font-display-lg text-headline-lg text-on-primary-container mb-8">Elevate your morning ritual</h2>
+            <p class="font-body-lg text-body-lg text-on-primary-container opacity-80 mb-10 leading-relaxed">Subscribe to our newsletter for exclusive tasting events, new bean drops, and brewing tips from our master baristas.</p>
+            <form class="flex flex-col md:flex-row gap-4 max-w-lg mx-auto" onsubmit="event.preventDefault();">
+                <input class="flex-grow bg-white/5 border border-white/10 rounded-xl px-6 py-4 text-on-primary-container placeholder:text-on-primary-container/40 focus:ring-2 focus:ring-secondary focus:border-transparent transition-all outline-none" placeholder="Your email address" type="email"/>
+                <button class="bg-[#D4AF37] text-[#2B1D14] px-10 py-4 rounded-xl font-bold font-label-lg text-label-lg hover:opacity-90 active:scale-95 transition-all shadow-lg whitespace-nowrap" type="button">Subscribe</button>
+            </form>
+        </div>
+    </div>
+</section>
+
+<!-- ===== SHARED FOOTER ===== -->
+<footer class="bg-primary border-t border-outline-variant/10">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-gutter px-margin-mobile md:px-margin-desktop py-section-gap max-w-container-max mx-auto">
+        <div class="space-y-6">
+            <div class="font-display-lg text-headline-sm text-on-primary">Brewed Awakening</div>
+            <p class="font-body-sm text-body-sm text-on-primary/70 max-w-xs">Dedicated to the pursuit of the perfect cup. We source sustainably and roast with precision.</p>
+            <div class="flex gap-4">
+                <a class="text-on-primary/70 hover:text-on-primary transition-colors" href="#">
+                    <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 1.366.062 2.633.332 3.608 1.308.975.975 1.245 2.242 1.308 3.608.058 1.266.07 1.646.07 4.85s-.012 3.584-.07 4.85c-.063 1.366-.333 2.633-1.308 3.608-.975.975-2.242 1.245-3.608 1.308-1.266.058-1.646.07-4.85.07s-3.584-.012-4.85-.07c-1.366-.063-2.633-.333-3.608-1.308-.975-.975-1.245-2.242-1.308-3.608-.058-1.266-.07-1.646-.07-4.85s.012-3.584.07-4.85c.062-1.366.332-2.633 1.308-3.608.975-.975 2.242-1.245 3.608-1.308 1.266-.058 1.646-.07 4.85-.07m0-2.163c-3.259 0-3.667.014-4.947.072-1.277.058-2.15.261-2.913.558-.788.306-1.457.716-2.122 1.383s-1.077 1.334-1.383 2.122c-.297.763-.5 1.636-.558 2.913-.058 1.28-.072 1.688-.072 4.947s.014 3.667.072 4.947c.058 1.277.261 2.15.558 2.913.306.788.717 1.457 1.383 2.122s1.334 1.077 2.122 1.383c.763.297 1.636.5 2.913.558 1.28.058 1.688.072 4.947.072s3.667-.014 4.947-.072c1.277-.058 2.15-.261 2.913-.558.788-.306 1.457-.717 2.122-1.383s1.077-1.334 1.383-2.122c.297-.763.5-1.636.558-2.913.058-1.28.072-1.688.072-4.947s-.014-3.667-.072-4.947c-.058-1.277-.261-2.15-.558-2.913-.306-.788-.717-1.457-1.383-2.122s-1.334-1.077-2.122-1.383c-.763-.297-1.636-.5-2.913-.558-1.28-.058-1.688-.072-4.947-.072zM12 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.162 6.162 6.162 6.162-2.759 6.162-6.162-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.791-4-4s1.791-4 4-4 4 1.791 4 4-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"></path></svg>
+                </a>
+                <a class="text-on-primary/70 hover:text-on-primary transition-colors" href="#">
+                    <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24"><path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"></path></svg>
+                </a>
+            </div>
+        </div>
+        <div>
+            <h4 class="font-bold text-on-primary mb-6 font-label-lg text-label-lg">Quick Links</h4>
+            <ul class="space-y-4">
+                <li><a class="text-on-primary/70 hover:text-on-primary hover:underline transition-all font-label-sm text-label-sm" href="menu.html">Home</a></li>
+                <li><a class="text-on-primary/70 hover:text-on-primary hover:underline transition-all font-label-sm text-label-sm" href="menu.html">Menu</a></li>
+                <li><a class="text-on-primary/70 hover:text-on-primary hover:underline transition-all font-label-sm text-label-sm" href="#">Our Story</a></li>
+                <li><a class="text-on-primary/70 hover:text-on-primary hover:underline transition-all font-label-sm text-label-sm" href="#">Contact Us</a></li>
+            </ul>
+        </div>
+        <div>
+            <h4 class="font-bold text-on-primary mb-6 font-label-lg text-label-lg">Support</h4>
+            <ul class="space-y-4">
+                <li><a class="text-on-primary/70 hover:text-on-primary hover:underline transition-all font-label-sm text-label-sm" href="#">Shipping Info</a></li>
+                <li><a class="text-on-primary/70 hover:text-on-primary hover:underline transition-all font-label-sm text-label-sm" href="#">Returns &amp; Refunds</a></li>
+                <li><a class="text-on-primary/70 hover:text-on-primary hover:underline transition-all font-label-sm text-label-sm" href="#">Privacy Policy</a></li>
+                <li><a class="text-on-primary/70 hover:text-on-primary hover:underline transition-all font-label-sm text-label-sm" href="#">Terms of Service</a></li>
+            </ul>
+        </div>
+        <div>
+            <h4 class="font-bold text-on-primary mb-6 font-label-lg text-label-lg">Visit Us</h4>
+            <p class="text-on-primary/70 font-label-sm text-label-sm leading-relaxed">
+                123 Espresso Lane<br/>
+                Barista District<br/>
+                Coffee City, CC 54321
+            </p>
+            <div class="mt-4 flex items-center gap-2 text-on-primary/70">
+                <span class="material-symbols-outlined text-sm">schedule</span>
+                <span class="text-label-sm font-label-sm">7:00 AM - 8:00 PM</span>
+            </div>
+        </div>
+    </div>
+    <div class="border-t border-outline-variant/10 py-8 px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto text-center md:text-left">
+        <p class="text-on-primary/50 font-label-sm text-label-sm">&copy; 2024 Brewed Awakening. The Art of Coffee. All Rights Reserved.</p>
+    </div>
+</footer>
+
+<!-- Cart Logic -->
+<script src="cart.js"></script>
+
+<!-- Page Scripts -->
+<script>
+    const fallbackMenuItems = [
+        { id: 1, name: 'Classic Cappuccino', price: 4.50, image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDANHESWbPMo6bPXVp4dGjxH-jpRofI7bJPHH1NwQnQlYyUeRNdDH-A0lpHRKioCVV92w8w3USt78YYoGT3WcYTuPobgrvComO31R-Qfc5CsFWu74g3B-3nhiAKv5DNEFq2Q2OOPRI3_wrt7CfyDaOD8Iup6D0ZDL6bb-ZSjzKA8Vr7ZPD1VYjGfFC3ac7174XYAMEWHqsw9r3600RraAo52LyAxDCGlJ2kx7g-ZtR_2dyHCZ0w0mKevw', description: 'Rich espresso balanced with silky steamed milk and a deep layer of foam.', tags: ['HOT', '8oz'], category: 'Coffee' },
+        { id: 2, name: 'Double Origin Espresso', price: 3.25, image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDt5bizW3cIHcoZNrgkAa3H9-q7spcw9cvev5m9axpAWkOb95QOpUNL2nRsd4wUuTXZyWTlRZvLwmYvQh7jhudGWAEf_crmFRA64EAuoiHb0DU1xs3Ns9SFpqDHuAJkDdaUSpvPMgGQbNZNVYpiy4Sv0sBlEw3emQUuCzbBsUn88Ut6ZyVAhqMmAbhpZTAz6nl75-qsvivTBoBc3FNsxwEIqH72Q7VQU8s7QclVNof6V-O80i8cRXO16Q', description: 'A concentrated shot of our single-origin bean, featuring notes of dark chocolate and citrus.', tags: ['HOT', '2oz'], category: 'Coffee' },
+        { id: 3, name: 'Artisan Butter Croissant', price: 3.95, image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuA7_wWCguAOAzhw1eZvSfJDaMZnV_wFMXyANeijb6uIbWQiimXkXk7y38o9PfAv-YGgVLwAYY62VlCOUQjmPGM-pkjIAD9AfQSJ_QOgtatpnshIn7deNiRJl_ZMFMfWLsEwvvOA8siY6fj5YM1TkiG5iiX13OLCoYl1MexZfm056ONPoRJEUZxz_pxaBqI7n77MX66DESfAucB7V3EeHyWAMszLKwIdSkh1NTHrplKQW67JgD-du5hP5A', description: 'Hand-folded layers of French butter pastry, baked fresh every morning to a perfect golden crisp.', tags: ['FRESH', 'BAKED'], category: 'Pastries' },
+        { id: 4, name: 'Salted Dark Chocolate Tart', price: 6.50, image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCWmIzz0d_qU_kDnpqDV5gdegN4rVjWG5EPn6mICp5MxXCaAKUanRD_51dMPNQyA8UDJLeOI5v649tVDl3VdYTKT5JOydg6ZmyxPUAE9dMvJ4qbNNMZn0POPKJLYFeAk0w5A1hHh2JHp-UdFG8-CuWrFc_GMjL8T8KdRFGHukeIWMddihzvxu-4einzVYxQ6X7CwlOoTxMqKy5cHS-FtvzBA1Vrm3SvV3H0Vf2-4pwmenekDa8kP1EIsA', description: 'Indulgent 70% cocoa ganache in a crisp pastry shell, finished with flakes of Maldon sea salt.', tags: ['SWEET', 'VEGAN'], category: 'Pastries' },
+        { id: 5, name: 'Caramel Cloud Iced Latte', price: 5.75, image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuANtD8WtBzQ_yPgsB987VS05wVnrFo0laVSvVF3uBUDXNU5VVneeGSlwFPKp3WpV--XxxvNdI9hGRYyJNFIDtkaTYSGVDijFRViqorsEsPNi7reV6XaZf67LVLzn4NMH66Gwyq6cEEimiD8M8mbtId74DezTFGCO17UKjPUWX-C8uVr6qyRs9TTSRYxby_VYAB3A8vXDgZz_mFuaBMzcs0Kqeq8t2G_LnKfsUi_Fy6NZ8xEH_qcV8Gr5Q', description: 'Our signature espresso over ice, swirled with premium buttery caramel and cold-pressed milk.', tags: ['COLD', '16oz'], category: 'Cold Drinks' },
+        { id: 6, name: 'Organic Matcha Latte', price: 5.25, image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBBvjmJ_N2K_rGzCOXi2plykZvLfk01JLVMfPnP2JoLrdDdfXyA5zyAPXMC444dFg3rGkMQQsF94m5pjiYzpdzzBXs-Q7shy6RF8qCLFxUVOCc-2AXAedg6mprj1BrvXsWzV9opSbWfX7aiaJf_MUFm3OUrLvXUnct5m4czM6ziNwsSXu0mMS6UL9k6H12EZPG_3OataQoAln3dbv1j7HBIXHsVZUtAxam-GpGFOK5gq9I14FeWxt2PaQ', description: 'Ceremonial grade Uji matcha whisked with your choice of milk for a smooth, earthy finish.', tags: ['HOT/COLD', '12oz'], category: 'Cold Drinks' }
+    ];
+
+    function navigateToDetail(event, cardElement) {
+        event.stopPropagation();
+        const itemData = JSON.parse(cardElement.getAttribute('data-item'));
+        setSelectedItem(itemData);
+        window.location.href = 'item-detail.html?id=' + itemData.id;
+    }
+
+    function handleQuickAdd(event, cardElement) {
+        event.stopPropagation();
+        event.preventDefault();
+        const itemData = JSON.parse(cardElement.getAttribute('data-item'));
+        addToCart(itemData);
+    }
+
+    function normalizeCategory(category) {
+        const value = (category || '').toString().trim().toLowerCase();
+        if (value.includes('coffee')) return 'coffee';
+        if (value.includes('pastry') || value.includes('bakery')) return 'pastries';
+        if (value.includes('cold') || value.includes('drink')) return 'cold-drinks';
+        return 'coffee';
+    }
+
+    function createItemCard(item) {
+        const itemId = item.id || item.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+        const itemData = {
+            id: itemId,
+            name: item.name,
+            price: parseFloat(item.price),
+            image: item.image || item.image_url || '',
+            description: item.description || '',
+            tags: item.tags || [],
+            category: item.category || ''
+        };
+
+        const tagsHtml = (itemData.tags || []).slice(0, 2).map(tag => `<span class="px-2 py-1 bg-secondary-container text-on-secondary-container rounded-lg text-[10px] font-bold">${tag}</span>`).join('');
+        const imageUrl = itemData.image || 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=900&q=80';
+
+        return `
+            <div class="group bg-white rounded-[24px] overflow-hidden ambient-shadow border border-outline-variant/10 hover:-translate-y-2 transition-all duration-300 cursor-pointer"
+                 data-item-id="${itemId}"
+                 data-item='${JSON.stringify(itemData).replace(/'/g, '&apos;')}'>
+                <div class="h-64 overflow-hidden" onclick="navigateToDetail(event, this.parentElement)">
+                    <img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" alt="${itemData.name}" src="${imageUrl}"/>
+                </div>
+                <div class="p-6 flex flex-col gap-4">
+                    <div class="flex justify-between items-start cursor-pointer" onclick="navigateToDetail(event, this.closest('[data-item-id]'))">
+                        <h3 class="font-headline-sm text-headline-sm text-primary">${itemData.name}</h3>
+                        <span class="font-bold text-[#D4AF37] text-lg">PKR ${parseFloat(itemData.price).toFixed(2)}</span>
+                    </div>
+                    <p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">${itemData.description}</p>
+                    <div class="flex items-center justify-between pt-2">
+                        <div class="flex gap-1">${tagsHtml}</div>
+                        <button class="add-to-cart-btn bg-[#D4AF37] text-[#2B1D14] h-10 w-10 rounded-xl flex items-center justify-center hover:opacity-90 active:scale-90 transition-all shadow-sm" onclick="handleQuickAdd(event, this.closest('[data-item-id]'))">
+                            <span class="material-symbols-outlined text-xl">add</span>
+                        </button>
+                    </div>
+                </div>
+            </div>`;
+    }
+
+    function renderMenuItems(items) {
+        const containers = {
+            coffee: document.getElementById('coffee-items'),
+            pastries: document.getElementById('pastries-items'),
+            'cold-drinks': document.getElementById('cold-drinks-items')
+        };
+
+        Object.values(containers).forEach(container => {
+            if (container) container.innerHTML = '';
+        });
+
+        items.forEach(item => {
+            const category = normalizeCategory(item.category);
+            const container = containers[category];
+            if (container) {
+                container.insertAdjacentHTML('beforeend', createItemCard(item));
+            }
+        });
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('opacity-100', 'translate-y-0');
+                    entry.target.classList.remove('opacity-0', 'translate-y-10');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('#product-grid .group').forEach(card => {
+            card.classList.add('opacity-0', 'translate-y-10', 'transition-all', 'duration-700');
+            observer.observe(card);
+        });
+    }
+
+    async function loadMenuItems() {
+        try {
+            if (window.supabaseClient && typeof window.supabaseClient.from === 'function') {
+                const { data, error } = await supabaseClient.from('Menu Items').select('*');
+                if (!error && Array.isArray(data) && data.length) {
+                    renderMenuItems(data);
+                    return;
+                }
+                if (error) {
+                    console.error('Supabase menu fetch failed:', error);
+                }
+            }
+        } catch (error) {
+            console.error('Supabase menu fetch failed:', error);
+        }
+
+        renderMenuItems(fallbackMenuItems);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const tabContainer = document.getElementById('category-tabs');
+        const sections = {
+            coffee: document.querySelector('[data-category="coffee"]'),
+            pastries: document.querySelector('[data-category="pastries"]'),
+            'cold-drinks': document.querySelector('[data-category="cold-drinks"]')
+        };
+
+        if (tabContainer) {
+            const buttons = tabContainer.querySelectorAll('button');
+            const setActiveCategory = (category) => {
+                buttons.forEach(btn => {
+                    const isActive = btn.dataset.filter === category;
+                    btn.classList.toggle('bg-secondary-fixed', isActive);
+                    btn.classList.toggle('text-on-secondary-fixed', isActive);
+                    btn.classList.toggle('font-bold', isActive);
+                    btn.classList.toggle('border-transparent', isActive);
+                    btn.classList.toggle('bg-transparent', !isActive);
+                    btn.classList.toggle('text-on-surface-variant', !isActive);
+                    btn.classList.toggle('font-medium', !isActive);
+                    btn.classList.toggle('border-outline-variant/30', !isActive);
+                });
+
+                Object.entries(sections).forEach(([key, section]) => {
+                    if (section) {
+                        section.classList.toggle('hidden', key !== category);
+                    }
+                });
+            };
+
+            buttons.forEach(btn => {
+                btn.addEventListener('click', () => setActiveCategory(btn.dataset.filter));
+            });
+
+            setActiveCategory('coffee');
+        }
+
+        loadMenuItems();
+    });
+</script>
+</body>
+</html>

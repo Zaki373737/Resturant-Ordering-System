@@ -1,0 +1,11 @@
+.env
+.env.local
+.env.*.local
+node_modules
+
+# Internal working docs / personal notes — keep out of the repo (see §3)
+Security_Data_Privacy_Protocols.txt
+
+# Design exports / scratch assets — not part of the shipped site
+stitch_brewed_awakening_checkout_page/
+stitch_brewed_awakening_checkout_page.zip

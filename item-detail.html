@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html class="scroll-smooth" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Brewed Awakening | Item Detail</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+    <!-- Material Symbols -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "on-tertiary-container": "#7d8a8d",
+                        "outline": "#80756f",
+                        "surface-variant": "#f1dfd1",
+                        "on-secondary-fixed-variant": "#5a4229",
+                        "inverse-on-surface": "#ffeee0",
+                        "primary-fixed-dim": "#dbc2b3",
+                        "surface-container-highest": "#f1dfd1",
+                        "secondary": "#735a3e",
+                        "on-background": "#231a11",
+                        "tertiary-fixed": "#d8e5e9",
+                        "inverse-primary": "#dbc2b3",
+                        "on-error-container": "#93000a",
+                        "tertiary-container": "#162225",
+                        "primary-container": "#2b1d14",
+                        "tertiary-fixed-dim": "#bcc9cd",
+                        "on-primary-container": "#998377",
+                        "on-secondary-fixed": "#291803",
+                        "secondary-fixed": "#ffddbb",
+                        "on-surface-variant": "#4e453f",
+                        "surface-container": "#fdebdc",
+                        "primary-fixed": "#f8ddcf",
+                        "on-primary": "#ffffff",
+                        "on-secondary": "#ffffff",
+                        "surface-container-high": "#f7e5d7",
+                        "surface-container-lowest": "#ffffff",
+                        "on-surface": "#231a11",
+                        "on-primary-fixed": "#261910",
+                        "secondary-fixed-dim": "#e3c19f",
+                        "error-container": "#ffdad6",
+                        "background": "#fff8f4",
+                        "on-primary-fixed-variant": "#554339",
+                        "tertiary": "#010a0d",
+                        "inverse-surface": "#392f25",
+                        "on-tertiary": "#ffffff",
+                        "on-tertiary-fixed": "#111d20",
+                        "surface-tint": "#6e5a4f",
+                        "outline-variant": "#d2c4bd",
+                        "secondary-container": "#fdd9b7",
+                        "surface-container-low": "#fff1e7",
+                        "on-secondary-container": "#785e42",
+                        "surface-bright": "#fff8f4",
+                        "surface-dim": "#e8d7c9",
+                        "primary": "#100602",
+                        "surface": "#fff8f4",
+                        "on-error": "#ffffff",
+                        "error": "#ba1a1a",
+                        "on-tertiary-fixed-variant": "#3c494c",
+                        "brand-gold": "#D4AF37"
+                    },
+                    borderRadius: {
+                        DEFAULT: "0.25rem",
+                        lg: "0.5rem",
+                        xl: "0.75rem",
+                        full: "9999px"
+                    },
+                    spacing: {
+                        unit: "8px",
+                        "margin-desktop": "48px",
+                        "container-max": "1280px",
+                        gutter: "24px",
+                        "section-gap": "120px",
+                        "margin-mobile": "20px"
+                    },
+                    fontFamily: {
+                        "display-lg": ["Playfair Display"],
+                        "headline-md": ["Playfair Display"],
+                        "label-lg": ["Montserrat"],
+                        "headline-lg": ["Playfair Display"],
+                        "body-md": ["Montserrat"],
+                        "body-lg": ["Montserrat"],
+                        "body-sm": ["Montserrat"],
+                        "headline-lg-mobile": ["Playfair Display"],
+                        "label-sm": ["Montserrat"],
+                        "headline-sm": ["Playfair Display"]
+                    },
+                    fontSize: {
+                        "display-lg": ["56px", { lineHeight: "1.1", letterSpacing: "-0.02em", fontWeight: "700" }],
+                        "headline-md": ["32px", { lineHeight: "1.3", fontWeight: "600" }],
+                        "label-lg": ["14px", { lineHeight: "1", letterSpacing: "0.05em", fontWeight: "600" }],
+                        "headline-lg": ["40px", { lineHeight: "1.2", fontWeight: "700" }],
+                        "body-md": ["16px", { lineHeight: "1.6", fontWeight: "400" }],
+                        "body-lg": ["18px", { lineHeight: "1.6", fontWeight: "400" }],
+                        "body-sm": ["14px", { lineHeight: "1.5", fontWeight: "400" }],
+                        "headline-lg-mobile": ["32px", { lineHeight: "1.2", fontWeight: "700" }],
+                        "label-sm": ["12px", { lineHeight: "1", letterSpacing: "0.03em", fontWeight: "500" }],
+                        "headline-sm": ["24px", { lineHeight: "1.4", fontWeight: "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Shared Styles -->
+    <link rel="stylesheet" href="styles.css"/>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-client.js"></script>
+</head>
+<body class="min-h-screen flex flex-col antialiased bg-background" data-page="item-detail">
+
+<!-- ===== SHARED NAVBAR ===== -->
+<header id="main-header" class="bg-background/90 backdrop-blur-md sticky top-0 z-50 border-b border-outline-variant/20 shadow-sm">
+    <nav class="flex justify-between items-center w-full px-margin-mobile md:px-margin-desktop py-unit max-w-container-max mx-auto">
+        <a href="menu.html" class="font-display-lg text-headline-sm font-bold text-primary no-underline">Brewed Awakening</a>
+        <div class="hidden md:flex items-center gap-gutter">
+            <a id="nav-menu" class="font-label-lg text-label-lg text-primary border-b-2 border-secondary-fixed-dim pb-1 nav-dot" href="menu.html">Menu</a>
+            <a id="nav-orders" class="font-label-lg text-label-lg text-on-surface-variant hover:text-primary transition-colors" href="cart.html">Orders</a>
+        </div>
+        <div class="flex items-center gap-6">
+            <div class="hidden md:block">
+                <button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-all p-2">search</button>
+            </div>
+            <a href="cart.html" class="relative" id="cart-icon-link">
+                <button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-all p-2">shopping_bag</button>
+                <span id="cart-count" class="absolute top-1 right-1 bg-secondary text-on-secondary text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold" style="display:none;">0</span>
+            </a>
+            <a href="menu.html" class="hidden md:block bg-[#D4AF37] text-[#2B1D14] px-6 py-2 rounded-xl font-bold font-label-lg text-label-lg hover:opacity-90 active:scale-95 transition-all shadow-sm no-underline">Order Now</a>
+        </div>
+    </nav>
+</header>
+
+<!-- Main Content Canvas -->
+<main class="flex-grow flex items-center justify-center pt-12 pb-12 px-4 md:px-0">
+    <div class="max-w-5xl w-full mx-auto grid grid-cols-1 md:grid-cols-2 bg-surface-container-lowest rounded-[24px] overflow-hidden soft-shadow animate-in fade-in zoom-in duration-500">
+        <!-- Left: Visual Section -->
+        <div class="relative min-h-[400px] md:min-h-[600px] bg-surface-container-low flex items-center justify-center p-8 overflow-hidden">
+            <div class="relative z-10 w-full h-full flex items-center justify-center">
+                <img id="item-image" class="w-full h-full object-contain drop-shadow-2xl transition-transform duration-700 hover:scale-105" alt="Item Image" src=""/>
+            </div>
+            <!-- Price Badge -->
+            <div class="absolute top-8 right-8 bg-surface-container-lowest px-4 py-2 rounded-full shadow-md border border-outline-variant/20">
+                <span id="item-price-badge" class="font-headline-sm text-secondary-fixed-variant"></span>
+            </div>
+        </div>
+        <!-- Right: Content Section -->
+        <div class="p-8 md:p-12 flex flex-col justify-center bg-white">
+            <div class="mb-2">
+                <span id="item-category" class="font-label-sm text-label-sm text-secondary uppercase tracking-widest px-3 py-1 bg-secondary/10 rounded-full"></span>
+            </div>
+            <h1 id="item-name" class="font-display-lg text-headline-lg md:text-display-lg text-primary-container mb-4"></h1>
+            <p id="item-description" class="font-body-lg text-body-lg text-on-surface-variant mb-8 leading-relaxed"></p>
+            
+            <!-- Customization Options -->
+            <div class="space-y-6 mb-10">
+                <!-- Quantity Selector -->
+                <div>
+                    <label class="font-label-lg text-label-lg block mb-3 text-primary-container">Quantity</label>
+                    <div class="flex items-center w-fit border border-outline-variant/40 rounded-[16px] p-1 bg-surface-container-lowest">
+                        <button class="w-10 h-10 flex items-center justify-center text-primary-container hover:bg-surface-variant rounded-[12px] transition-colors" onclick="decrementQty()">
+                            <span class="material-symbols-outlined">remove</span>
+                        </button>
+                        <input id="item-quantity" class="w-12 text-center border-none bg-transparent focus:ring-0 font-body-md text-primary-container" min="1" readonly="" type="number" value="1"/>
+                        <button class="w-10 h-10 flex items-center justify-center text-primary-container hover:bg-surface-variant rounded-[12px] transition-colors" onclick="incrementQty()">
+                            <span class="material-symbols-outlined">add</span>
+                        </button>
+                    </div>
+                </div>
+                <!-- Notes -->
+                <div>
+                    <label class="font-label-lg text-label-lg block mb-3 text-primary-container">Special Instructions</label>
+                    <textarea id="item-notes" class="w-full rounded-[16px] border-outline-variant/40 focus:border-secondary focus:ring-secondary/20 font-body-sm text-body-sm bg-surface-container-low/30 p-4 transition-all" placeholder="e.g. extra hot, dairy-free milk..." rows="3"></textarea>
+                </div>
+            </div>
+            <!-- Add to Cart Action -->
+            <div class="flex flex-col gap-4">
+                <button id="add-to-cart-btn" class="gold-button w-full py-5 rounded-[16px] font-label-lg text-label-lg font-bold flex items-center justify-center gap-3 shadow-md transition-all hover:opacity-90 active:scale-95" onclick="handleAdd()">
+                    <span class="material-symbols-outlined">shopping_bag</span>
+                    <span id="add-btn-text">Add to Cart</span>
+                </button>
+                <a href="menu.html" class="w-full py-4 text-center rounded-[16px] border border-outline-variant/40 font-label-lg text-label-lg text-on-surface-variant hover:bg-surface-container-low transition-colors font-medium no-underline">
+                    Back to Menu
+                </a>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- ===== SHARED FOOTER ===== -->
+<footer class="bg-primary border-t border-outline-variant/10">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-gutter px-margin-mobile md:px-margin-desktop py-section-gap max-w-container-max mx-auto">
+        <div class="space-y-6">
+            <div class="font-display-lg text-headline-sm text-on-primary">Brewed Awakening</div>
+            <p class="font-body-sm text-body-sm text-on-primary/70 max-w-xs">Dedicated to the pursuit of the perfect cup. We source sustainably and roast with precision.</p>
+            <div class="flex gap-4">
+                <a class="text-on-primary/70 hover:text-on-primary transition-colors" href="#">
+                    <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 1.366.062 2.633.332 3.608 1.308.975.975 1.245 2.242 1.308 3.608.058 1.266.07 1.646.07 4.85s-.012 3.584-.07 4.85c-.063 1.366-.333 2.633-1.308 3.608-.975.975-2.242 1.245-3.608 1.308-1.266.058-1.646.07-4.85.07s-3.584-.012-4.85-.07c-1.366-.063-2.633-.333-3.608-1.308-.975-.975-1.245-2.242-1.308-3.608-.058-1.266-.07-1.646-.07-4.85s.012-3.584.07-4.85c.062-1.366.332-2.633 1.308-3.608.975-.975 2.242-1.245 3.608-1.308 1.266-.058 1.646-.07 4.85-.07m0-2.163c-3.259 0-3.667.014-4.947.072-1.277.058-2.15.261-2.913.558-.788.306-1.457.716-2.122 1.383s-1.077 1.334-1.383 2.122c-.297.763-.5 1.636-.558 2.913-.058 1.28-.072 1.688-.072 4.947s.014 3.667.072 4.947c.058 1.277.261 2.15.558 2.913.306.788.717 1.457 1.383 2.122s1.334 1.077 2.122 1.383c.763.297 1.636.5 2.913.558 1.28.058 1.688.072 4.947.072s3.667-.014 4.947-.072c1.277-.058 2.15-.261 2.913-.558.788-.306 1.457-.717 2.122-1.383s1.077-1.334 1.383-2.122c.297-.763.5-1.636.558-2.913.058-1.28.072-1.688.072-4.947s-.014-3.667-.072-4.947c-.058-1.277-.261-2.15-.558-2.913-.306-.788-.717-1.457-1.383-2.122s-1.334-1.077-2.122-1.383c-.763-.297-1.636-.5-2.913-.558-1.28-.058-1.688-.072-4.947-.072zM12 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.162 6.162 6.162 6.162-2.759 6.162-6.162-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.791-4-4s1.791-4 4-4 4 1.791 4 4-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"></path></svg>
+                </a>
+                <a class="text-on-primary/70 hover:text-on-primary transition-colors" href="#">
+                    <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24"><path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"></path></svg>
+                </a>
+            </div>
+        </div>
+        <div>
+            <h4 class="font-bold text-on-primary mb-6 font-label-lg text-label-lg">Quick Links</h4>
+            <ul class="space-y-4">
+                <li><a class="text-on-primary/70 hover:text-on-primary hover:underline transition-all font-label-sm text-label-sm" href="menu.html">Home</a></li>
+                <li><a class="text-on-primary/70 hover:text-on-primary hover:underline transition-all font-label-sm text-label-sm" href="menu.html">Menu</a></li>
+                <li><a class="text-on-primary/70 hover:text-on-primary hover:underline transition-all font-label-sm text-label-sm" href="#">Our Story</a></li>
+                <li><a class="text-on-primary/70 hover:text-on-primary hover:underline transition-all font-label-sm text-label-sm" href="#">Contact Us</a></li>
+            </ul>
+        </div>
+        <div>
+            <h4 class="font-bold text-on-primary mb-6 font-label-lg text-label-lg">Support</h4>
+            <ul class="space-y-4">
+                <li><a class="text-on-primary/70 hover:text-on-primary hover:underline transition-all font-label-sm text-label-sm" href="#">Shipping Info</a></li>
+                <li><a class="text-on-primary/70 hover:text-on-primary hover:underline transition-all font-label-sm text-label-sm" href="#">Returns &amp; Refunds</a></li>
+                <li><a class="text-on-primary/70 hover:text-on-primary hover:underline transition-all font-label-sm text-label-sm" href="#">Privacy Policy</a></li>
+                <li><a class="text-on-primary/70 hover:text-on-primary hover:underline transition-all font-label-sm text-label-sm" href="#">Terms of Service</a></li>
+            </ul>
+        </div>
+        <div>
+            <h4 class="font-bold text-on-primary mb-6 font-label-lg text-label-lg">Visit Us</h4>
+            <p class="text-on-primary/70 font-label-sm text-label-sm leading-relaxed">
+                123 Espresso Lane<br/>
+                Barista District<br/>
+                Coffee City, CC 54321
+            </p>
+            <div class="mt-4 flex items-center gap-2 text-on-primary/70">
+                <span class="material-symbols-outlined text-sm">schedule</span>
+                <span class="text-label-sm font-label-sm">7:00 AM - 8:00 PM</span>
+            </div>
+        </div>
+    </div>
+    <div class="border-t border-outline-variant/10 py-8 px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto text-center md:text-left">
+        <p class="text-on-primary/50 font-label-sm text-label-sm">&copy; 2024 Brewed Awakening. The Art of Coffee. All Rights Reserved.</p>
+    </div>
+</footer>
+
+<!-- Cart Logic -->
+<script src="cart.js"></script>
+
+<!-- Page Scripts -->
+<script>
+    let currentItem = null;
+
+    function loadItem() {
+        const item = getSelectedItem();
+        if (!item) {
+            // Fallback to a default if none selected (e.g. user refreshed or navigated directly)
+            currentItem = {
+                id: 1,
+                name: "Classic Cappuccino",
+                price: 4.50,
+                image: "https://lh3.googleusercontent.com/aida-public/AB6AXuDANHESWbPMo6bPXVp4dGjxH-jpRofI7bJPHH1NwQnQlYyUeRNdDH-A0lpHRKioCVV92w8w3USt78YYoGT3WcYTuPobgrvComO31R-Qfc5CsFWu74g3B-3nhiAKv5DNEFq2Q2OOPRI3_wrt7CfyDaOD8Iup6D0ZDL6bb-ZSjzKA8Vr7ZPD1VYjGfFC3ac7174XYAMEWHqsw9r3600RraAo52LyAxDCGlJ2kx7g-ZtR_2dyHCZ0w0mKevw",
+                description: "Rich espresso balanced with silky steamed milk and a deep layer of foam.",
+                tags: ["HOT", "8oz"],
+                category: "Artisanal Espresso"
+            };
+        } else {
+            currentItem = item;
+        }
+
+        document.getElementById('item-image').src = currentItem.image;
+        document.getElementById('item-image').alt = currentItem.name;
+        document.getElementById('item-name').textContent = currentItem.name;
+        document.getElementById('item-price-badge').textContent = formatPrice(currentItem.price);
+        document.getElementById('item-category').textContent = currentItem.category || "Artisanal Espresso";
+        document.getElementById('item-description').textContent = currentItem.description;
+        updateAddBtnText();
+    }
+
+    function getQtyInput() {
+        return document.getElementById('item-quantity');
+    }
+
+    function incrementQty() {
+        const input = getQtyInput();
+        input.stepUp();
+        updateAddBtnText();
+    }
+
+    function decrementQty() {
+        const input = getQtyInput();
+        input.stepDown();
+        updateAddBtnText();
+    }
+
+    function updateAddBtnText() {
+        const qty = parseInt(getQtyInput().value) || 1;
+        const total = currentItem.price * qty;
+        document.getElementById('add-btn-text').textContent = `Add to Cart — ${formatPrice(total)}`;
+    }
+
+    function handleAdd() {
+        const qty = parseInt(getQtyInput().value) || 1;
+        const notes = document.getElementById('item-notes').value;
+        
+        // Add special instructions to tags/description dynamically
+        const itemToAdd = { ...currentItem, quantity: qty };
+        if (notes) {
+            itemToAdd.description += ` (Note: ${notes})`;
+        }
+
+        // Add to cart animation
+        const btn = document.getElementById('add-to-cart-btn');
+        const originalContent = btn.innerHTML;
+        btn.innerHTML = `<span class="material-symbols-outlined animate-spin">refresh</span> Adding...`;
+        btn.disabled = true;
+
+        setTimeout(() => {
+            addToCart(itemToAdd);
+            btn.innerHTML = `<span class="material-symbols-outlined">check_circle</span> Added to Cart`;
+            btn.classList.replace('gold-button', 'bg-green-600');
+            btn.classList.add('text-white');
+            
+            setTimeout(() => {
+                btn.innerHTML = originalContent;
+                btn.classList.replace('bg-green-600', 'gold-button');
+                btn.classList.remove('text-white');
+                btn.disabled = false;
+                updateAddBtnText();
+            }, 1500);
+        }, 800);
+    }
+
+    document.addEventListener('DOMContentLoaded', loadItem);
+</script>
+</body>
+</html>

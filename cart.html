@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html class="scroll-smooth" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Your Cart | Brewed Awakening</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+    <!-- Material Symbols -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "on-tertiary-container": "#7d8a8d",
+                        "outline": "#80756f",
+                        "surface-variant": "#f1dfd1",
+                        "on-secondary-fixed-variant": "#5a4229",
+                        "inverse-on-surface": "#ffeee0",
+                        "primary-fixed-dim": "#dbc2b3",
+                        "surface-container-highest": "#f1dfd1",
+                        "secondary": "#735a3e",
+                        "on-background": "#231a11",
+                        "tertiary-fixed": "#d8e5e9",
+                        "inverse-primary": "#dbc2b3",
+                        "on-error-container": "#93000a",
+                        "tertiary-container": "#162225",
+                        "primary-container": "#2b1d14",
+                        "tertiary-fixed-dim": "#bcc9cd",
+                        "on-primary-container": "#998377",
+                        "on-secondary-fixed": "#291803",
+                        "secondary-fixed": "#ffddbb",
+                        "on-surface-variant": "#4e453f",
+                        "surface-container": "#fdebdc",
+                        "primary-fixed": "#f8ddcf",
+                        "on-primary": "#ffffff",
+                        "on-secondary": "#ffffff",
+                        "surface-container-high": "#f7e5d7",
+                        "surface-container-lowest": "#ffffff",
+                        "on-surface": "#231a11",
+                        "on-primary-fixed": "#261910",
+                        "secondary-fixed-dim": "#e3c19f",
+                        "error-container": "#ffdad6",
+                        "background": "#fff8f4",
+                        "on-primary-fixed-variant": "#554339",
+                        "tertiary": "#010a0d",
+                        "inverse-surface": "#392f25",
+                        "on-tertiary": "#ffffff",
+                        "on-tertiary-fixed": "#111d20",
+                        "surface-tint": "#6e5a4f",
+                        "outline-variant": "#d2c4bd",
+                        "secondary-container": "#fdd9b7",
+                        "surface-container-low": "#fff1e7",
+                        "on-secondary-container": "#785e42",
+                        "surface-bright": "#fff8f4",
+                        "surface-dim": "#e8d7c9",
+                        "primary": "#100602",
+                        "surface": "#fff8f4",
+                        "on-error": "#ffffff",
+                        "error": "#ba1a1a",
+                        "on-tertiary-fixed-variant": "#3c494c",
+                        "brand-gold": "#D4AF37"
+                    },
+                    borderRadius: {
+                        DEFAULT: "0.25rem",
+                        lg: "0.5rem",
+                        xl: "0.75rem",
+                        full: "9999px"
+                    },
+                    spacing: {
+                        unit: "8px",
+                        "margin-desktop": "48px",
+                        "container-max": "1280px",
+                        gutter: "24px",
+                        "section-gap": "120px",
+                        "margin-mobile": "20px"
+                    },
+                    fontFamily: {
+                        "display-lg": ["Playfair Display"],
+                        "headline-md": ["Playfair Display"],
+                        "label-lg": ["Montserrat"],
+                        "headline-lg": ["Playfair Display"],
+                        "body-md": ["Montserrat"],
+                        "body-lg": ["Montserrat"],
+                        "body-sm": ["Montserrat"],
+                        "headline-lg-mobile": ["Playfair Display"],
+                        "label-sm": ["Montserrat"],
+                        "headline-sm": ["Playfair Display"]
+                    },
+                    fontSize: {
+                        "display-lg": ["56px", { lineHeight: "1.1", letterSpacing: "-0.02em", fontWeight: "700" }],
+                        "headline-md": ["32px", { lineHeight: "1.3", fontWeight: "600" }],
+                        "label-lg": ["14px", { lineHeight: "1", letterSpacing: "0.05em", fontWeight: "600" }],
+                        "headline-lg": ["40px", { lineHeight: "1.2", fontWeight: "700" }],
+                        "body-md": ["16px", { lineHeight: "1.6", fontWeight: "400" }],
+                        "body-lg": ["18px", { lineHeight: "1.6", fontWeight: "400" }],
+                        "body-sm": ["14px", { lineHeight: "1.5", fontWeight: "400" }],
+                        "headline-lg-mobile": ["32px", { lineHeight: "1.2", fontWeight: "700" }],
+                        "label-sm": ["12px", { lineHeight: "1", letterSpacing: "0.03em", fontWeight: "500" }],
+                        "headline-sm": ["24px", { lineHeight: "1.4", fontWeight: "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Shared Styles -->
+    <link rel="stylesheet" href="styles.css"/>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-client.js"></script>
+</head>
+<body class="bg-background text-on-background font-body-md selection:bg-primary-fixed selection:text-on-primary-fixed" data-page="cart">
+
+<!-- ===== SHARED NAVBAR ===== -->
+<header id="main-header" class="bg-background/90 backdrop-blur-md sticky top-0 z-50 border-b border-outline-variant/20 shadow-sm">
+    <nav class="flex justify-between items-center w-full px-margin-mobile md:px-margin-desktop py-unit max-w-container-max mx-auto">
+        <a href="menu.html" class="font-display-lg text-headline-sm font-bold text-primary no-underline">Brewed Awakening</a>
+        <div class="hidden md:flex items-center gap-gutter">
+            <a id="nav-menu" class="font-label-lg text-label-lg text-on-surface-variant hover:text-primary transition-colors" href="menu.html">Menu</a>
+            <a id="nav-orders" class="font-label-lg text-label-lg text-primary border-b-2 border-secondary-fixed-dim pb-1 nav-dot" href="cart.html">Orders</a>
+        </div>
+        <div class="flex items-center gap-6">
+            <div class="hidden md:block">
+                <button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-all p-2">search</button>
+            </div>
+            <a href="cart.html" class="relative" id="cart-icon-link">
+                <button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-all p-2">shopping_bag</button>
+                <span id="cart-count" class="absolute top-1 right-1 bg-secondary text-on-secondary text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold" style="display:none;">0</span>
+            </a>
+            <a href="menu.html" class="hidden md:block bg-[#D4AF37] text-[#2B1D14] px-6 py-2 rounded-xl font-bold font-label-lg text-label-lg hover:opacity-90 active:scale-95 transition-all shadow-sm no-underline">Order Now</a>
+        </div>
+    </nav>
+</header>
+
+<main class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-12 md:py-24">
+    <div id="cart-content-container" class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+        <!-- Cart Items Section -->
+        <div class="lg:col-span-8">
+            <h1 class="font-display-lg text-headline-lg mb-8">Your Cart</h1>
+            <div id="cart-items-list" class="space-y-6">
+                <!-- Dynamically populated -->
+            </div>
+        </div>
+        <!-- Summary Section -->
+        <div class="lg:col-span-4">
+            <div class="sticky top-[120px]">
+                <div class="bg-white p-8 rounded-[24px] custom-shadow">
+                    <h2 class="font-headline-md text-headline-md mb-6">Order Summary</h2>
+                    <div class="space-y-4 mb-8">
+                        <div class="flex justify-between items-center text-on-surface-variant">
+                            <span class="font-body-md text-body-md">Subtotal</span>
+                            <span id="summary-subtotal" class="font-body-md text-body-md font-semibold text-primary">PKR 0.00</span>
+                        </div>
+                        <div class="flex justify-between items-center text-on-surface-variant">
+                            <span class="font-body-md text-body-md">Delivery Fee</span>
+                            <span id="summary-delivery" class="font-body-md text-body-md font-semibold text-primary">PKR 0.00</span>
+                        </div>
+                        <div class="flex justify-between items-center text-on-surface-variant">
+                            <span class="font-body-md text-body-md">Tax (8%)</span>
+                            <span id="summary-tax" class="font-body-md text-body-md font-semibold text-primary">PKR 0.00</span>
+                        </div>
+                        <div class="pt-4 border-t border-outline-variant/30 flex justify-between items-center">
+                            <span class="font-headline-sm text-headline-sm text-primary">Total</span>
+                            <span id="summary-total" class="font-headline-sm text-headline-sm text-[#D4AF37]">PKR 0.00</span>
+                        </div>
+                    </div>
+                    <button class="w-full bg-[#2B1D14] text-[#D4AF37] py-4 rounded-[16px] font-display-lg text-body-lg font-bold hover:opacity-90 transition-all active:scale-[0.98] shadow-md mb-4" onclick="window.location.href='checkout.html'">
+                        Proceed to Checkout
+                    </button>
+                    <p class="text-center font-label-sm text-label-sm text-on-surface-variant opacity-70">
+                        Estimated delivery time: 15-20 mins
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Empty State Prompt -->
+    <div id="cart-empty-state" class="hidden flex-col items-center justify-center py-24 text-center">
+        <span class="material-symbols-outlined text-6xl text-outline-variant mb-4">shopping_cart_off</span>
+        <h2 class="font-headline-md text-headline-md mb-2">Your cart is empty</h2>
+        <p class="text-on-surface-variant mb-8 max-w-sm">Looks like you haven't discovered our artisanal brews yet.</p>
+        <a class="bg-[#D4AF37] text-[#2B1D14] px-8 py-3 rounded-[16px] font-bold no-underline inline-block" href="menu.html">Start Browsing</a>
+    </div>
+</main>
+
+<!-- ===== SHARED FOOTER ===== -->
+<footer class="bg-primary border-t border-outline-variant/10">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-gutter px-margin-mobile md:px-margin-desktop py-section-gap max-w-container-max mx-auto text-on-primary">
+        <div class="space-y-6">
+            <div class="font-display-lg text-headline-sm text-on-primary">Brewed Awakening</div>
+            <p class="font-body-sm text-body-sm text-on-primary/70 max-w-xs">Dedicated to the pursuit of the perfect cup. We source sustainably and roast with precision.</p>
+        </div>
+        <div>
+            <h4 class="font-bold text-on-primary mb-6 font-label-lg text-label-lg">Quick Links</h4>
+            <ul class="space-y-4">
+                <li><a class="text-on-primary/70 hover:text-on-primary hover:underline transition-all font-label-sm text-label-sm" href="menu.html">Home</a></li>
+                <li><a class="text-on-primary/70 hover:text-on-primary hover:underline transition-all font-label-sm text-label-sm" href="menu.html">Menu</a></li>
+                <li><a class="text-on-primary/70 hover:text-on-primary hover:underline transition-all font-label-sm text-label-sm" href="#">Our Story</a></li>
+                <li><a class="text-on-primary/70 hover:text-on-primary hover:underline transition-all font-label-sm text-label-sm" href="#">Contact Us</a></li>
+            </ul>
+        </div>
+        <div>
+            <h4 class="font-bold text-on-primary mb-6 font-label-lg text-label-lg">Support</h4>
+            <ul class="space-y-4">
+                <li><a class="text-on-primary/70 hover:text-on-primary hover:underline transition-all font-label-sm text-label-sm" href="#">Shipping Info</a></li>
+                <li><a class="text-on-primary/70 hover:text-on-primary hover:underline transition-all font-label-sm text-label-sm" href="#">Returns &amp; Refunds</a></li>
+                <li><a class="text-on-primary/70 hover:text-on-primary hover:underline transition-all font-label-sm text-label-sm" href="#">Privacy Policy</a></li>
+                <li><a class="text-on-primary/70 hover:text-on-primary hover:underline transition-all font-label-sm text-label-sm" href="#">Terms of Service</a></li>
+            </ul>
+        </div>
+        <div>
+            <h4 class="font-bold text-on-primary mb-6 font-label-lg text-label-lg">Visit Us</h4>
+            <p class="text-on-primary/70 font-label-sm text-label-sm leading-relaxed">
+                123 Espresso Lane<br/>
+                Barista District<br/>
+                Coffee City, CC 54321
+            </p>
+            <div class="mt-4 flex items-center gap-2 text-on-primary/70">
+                <span class="material-symbols-outlined text-sm">schedule</span>
+                <span class="text-label-sm font-label-sm">7:00 AM - 8:00 PM</span>
+            </div>
+        </div>
+    </div>
+    <div class="border-t border-outline-variant/10 py-8 px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto text-center md:text-left">
+        <p class="text-on-primary/50 font-label-sm text-label-sm">&copy; 2024 Brewed Awakening. The Art of Coffee. All Rights Reserved.</p>
+    </div>
+</footer>
+
+<!-- Cart Logic -->
+<script src="cart.js"></script>
+
+<!-- Page Scripts -->
+<script>
+    function renderCart() {
+        const cart = getCart();
+        const list = document.getElementById('cart-items-list');
+        const contentContainer = document.getElementById('cart-content-container');
+        const emptyState = document.getElementById('cart-empty-state');
+
+        if (cart.length === 0) {
+            contentContainer.classList.add('hidden');
+            emptyState.classList.remove('hidden');
+            emptyState.classList.add('flex');
+            return;
+        }
+
+        contentContainer.classList.remove('hidden');
+        emptyState.classList.add('hidden');
+        emptyState.classList.remove('flex');
+
+        list.innerHTML = '';
+        cart.forEach(item => {
+            const tagsHtml = item.tags.map(tag => `<span class="px-2 py-1 bg-tertiary-fixed text-on-tertiary-fixed-variant rounded-lg text-[10px] font-bold">${tag}</span>`).join(' ');
+            
+            const div = document.createElement('div');
+            div.className = "flex items-center bg-white p-4 md:p-6 rounded-[24px] custom-shadow group transition-all hover:translate-y-[-2px]";
+            div.innerHTML = `
+                <div class="w-20 h-20 md:w-24 md:h-24 rounded-[16px] overflow-hidden flex-shrink-0">
+                    <img class="w-full h-full object-cover" alt="${item.name}" src="${item.image}"/>
+                </div>
+                <div class="ml-4 md:ml-6 flex-grow">
+                    <h3 class="font-headline-sm text-headline-sm text-primary mb-1">${item.name}</h3>
+                    <p class="font-body-sm text-body-sm text-on-surface-variant flex gap-1 flex-wrap">${tagsHtml}</p>
+                </div>
+                <div class="flex flex-col md:flex-row items-center gap-4 md:gap-12">
+                    <div class="flex items-center bg-surface-container-low rounded-[12px] px-3 py-1">
+                        <button class="material-symbols-outlined text-on-surface-variant hover:text-primary p-1" onclick="changeQty('${item.id}', -1)">remove</button>
+                        <span class="mx-3 font-label-lg text-label-lg">${item.quantity}</span>
+                        <button class="material-symbols-outlined text-on-surface-variant hover:text-primary p-1" onclick="changeQty('${item.id}', 1)">add</button>
+                    </div>
+                    <span class="font-headline-sm text-headline-sm text-[#D4AF37]">${formatPrice(item.price * item.quantity)}</span>
+                    <button class="material-symbols-outlined text-error/60 hover:text-error transition-colors p-2" title="Remove item" onclick="removeItem('${item.id}')">delete</button>
+                </div>
+            `;
+            list.appendChild(div);
+        });
+
+        // Totals
+        const totals = getCartTotal();
+        document.getElementById('summary-subtotal').textContent = formatPrice(totals.subtotal);
+        document.getElementById('summary-delivery').textContent = formatPrice(totals.deliveryFee);
+        document.getElementById('summary-tax').textContent = formatPrice(totals.tax);
+        document.getElementById('summary-total').textContent = formatPrice(totals.total);
+    }
+
+    function changeQty(id, delta) {
+        updateQuantity(id, delta);
+        renderCart();
+    }
+
+    function removeItem(id) {
+        removeFromCart(id);
+        renderCart();
+    }
+
+    document.addEventListener('DOMContentLoaded', renderCart);
+</script>
+</body>
+</html>

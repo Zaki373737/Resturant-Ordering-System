@@ -8,19 +8,39 @@
 // Configure these in Vercel → Project → Settings → Environment Variables:
 //   SUPABASE_URL, SUPABASE_ANON_KEY, JAZZCASH_INTEGRITY_SALT (+ merchant id/password later)
 
+import crypto from 'node:crypto';
+
 /**
- * Verify the JazzCash secure hash (HMAC-SHA256 of the sorted pp_* fields, keyed by
- * the Integrity Salt). Placeholder for now — always returns true.
+ * Verify the JazzCash secure hash. Same scheme used to sign the initiate request:
+ *   1. Take every field EXCEPT pp_SecureHash whose value is non-empty.
+ *   2. Sort alphabetically by key name.
+ *   3. Join their VALUES with '&', prepended by the Integrity Salt.
+ *   4. HMAC-SHA256 that string, keyed with the SAME Integrity Salt.
+ * Compare (case-insensitive, constant-time) against the received pp_SecureHash.
  *
- * @param {Record<string, string>} data - the posted pp_* fields
+ * @param {Record<string, string>} data - the posted fields
  * @param {string} integritySalt - JAZZCASH_INTEGRITY_SALT
  * @returns {boolean}
  */
 function verifySecureHash(data, integritySalt) {
-    // TODO: implement real HMAC-SHA256 verification once we have the Integrity Salt.
-    // Build the sorted "&"-joined value string of the pp_* fields, HMAC-SHA256 it with
-    // integritySalt, and compare (case-insensitive) against data.pp_SecureHash.
-    return true;
+    if (!integritySalt) return false;
+    const received = String(data.pp_SecureHash || '');
+    if (!received) return false;
+
+    let toBeHashed = integritySalt;
+    for (const key of Object.keys(data).sort()) {
+        if (key === 'pp_SecureHash') continue;
+        const value = data[key];
+        if (value !== undefined && value !== null && String(value).length > 0) {
+            toBeHashed += '&' + value;
+        }
+    }
+    const expected = crypto.createHmac('sha256', integritySalt).update(toBeHashed).digest('hex');
+
+    // Constant-time, case-insensitive comparison.
+    const a = Buffer.from(expected.toLowerCase(), 'utf8');
+    const b = Buffer.from(received.toLowerCase(), 'utf8');
+    return a.length === b.length && crypto.timingSafeEqual(a, b);
 }
 
 /**
@@ -46,7 +66,7 @@ export default async function handler(req, res) {
 
     const SUPABASE_URL = process.env.SUPABASE_URL;
     const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY;
-    const JAZZCASH_INTEGRITY_SALT = process.env.JAZZCASH_INTEGRITY_SALT;
+    const JAZZCASH_INTEGRITY_SALT = (process.env.JAZZCASH_INTEGRITY_SALT || '').trim();
 
     // Vercel parses x-www-form-urlencoded / JSON bodies into req.body automatically.
     const body = req.body || {};

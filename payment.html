@@ -443,12 +443,10 @@
 
         const paymentMethod = document.querySelector('input[name="payment_method"]:checked')?.value || selectedPayment || 'online';
 
-        // JazzCash / EasyPaisa flow — backend not wired yet.
-        // When the hosted-checkout integration is ready, replace the body of
-        // this branch with a redirect to JazzCash's checkout URL (e.g. build the
-        // signed request from the order + mobile number and window.location.href
-        // the customer to the gateway). Until then we short-circuit with a notice
-        // and leave the Cash on Delivery / Card flows below untouched.
+        // JazzCash / EasyPaisa: validate the mobile number up front. Unlike a short-circuit,
+        // we still create the order below (payment_status 'pending') so it exists in the DB,
+        // then hand the customer to JazzCash's hosted checkout. The order is flipped to
+        // paid/failed later by /api/jazzcash-callback when the gateway reports back.
         if (paymentMethod === 'mobile_wallet') {
             const mobile = (document.getElementById('wallet-mobile')?.value || '').trim();
             if (!/^03[0-9]{9}$/.test(mobile)) {
@@ -457,10 +455,6 @@
                 statusMessage.classList.remove('hidden');
                 return;
             }
-            statusMessage.className = 'mt-4 rounded-[16px] px-4 py-3 text-sm font-semibold text-center bg-secondary-container text-on-secondary-container';
-            statusMessage.textContent = 'JazzCash/EasyPaisa integration coming soon';
-            statusMessage.classList.remove('hidden');
-            return;
         }
 
         if (placeButton) {
@@ -479,13 +473,16 @@
             // 1. Read checkout details + cart from localStorage
             const checkout = getCheckoutData();
             const totals = getCartTotal();
-            const normalizedPaymentMethod = paymentMethod === 'cod' ? 'cash_on_delivery' : 'online_payment';
+            const normalizedPaymentMethod =
+                paymentMethod === 'cod' ? 'cash_on_delivery'
+                : paymentMethod === 'mobile_wallet' ? 'jazzcash'
+                : 'online_payment';
 
-            // Payment status by method:
+            // Payment status by method (all start 'pending'):
             //  - Cash on Delivery → 'pending' (paid on delivery)
-            //  - Card ('online')  → 'pending' (no real card processing yet;
-            //    flip to 'paid' here once the gateway confirms payment)
-            // JazzCash/EasyPaisa never reaches this code — it short-circuits above.
+            //  - Card ('online')  → 'pending' (no real card processing yet)
+            //  - JazzCash         → 'pending' now; /api/jazzcash-callback flips it to
+            //    'paid' or 'failed' once the gateway confirms the transaction.
             const paymentStatus = 'pending';
             const transactionRef = null; // no real transaction reference yet
 
@@ -516,7 +513,18 @@
                 throw new Error('The order could not be created.');
             }
 
-            // 3. Order + items were created atomically inside the function → confirm.
+            // 3a. JazzCash: the order now exists as 'pending'. Instead of showing the
+            //     confirmation, hand the customer off to JazzCash's hosted checkout. The
+            //     order is confirmed (or failed) after payment, on payment-callback.html.
+            if (paymentMethod === 'mobile_wallet') {
+                statusMessage.className = 'mt-4 rounded-[16px] px-4 py-3 text-sm font-semibold text-center bg-secondary-container text-on-secondary-container';
+                statusMessage.textContent = 'Redirecting you to JazzCash…';
+                statusMessage.classList.remove('hidden');
+                await startJazzCashPayment(newOrderId, totals.total);
+                return; // browser navigates to JazzCash; leave the button disabled
+            }
+
+            // 3b. Order + items were created atomically inside the function → confirm.
             const orderRef = 'BA-' + String(newOrderId).padStart(4, '0');
             document.getElementById('conf-order-ref').textContent = orderRef;
             document.getElementById('conf-delivery-name').textContent = checkout.name || 'Valued Customer';
@@ -539,6 +547,48 @@
                 placeButton.classList.remove('opacity-70', 'cursor-not-allowed');
             }
         }
+    }
+
+    // Ask our serverless function to build the signed JazzCash request, then POST those
+    // fields as a hidden form to JazzCash's hosted checkout. The gateway takes over from
+    // there and returns the customer to /api/jazzcash-callback when they're done.
+    //
+    // The order already exists in the DB (status 'pending') by the time we get here, so we
+    // clear the local cart before leaving — the order is safely recorded server-side.
+    async function startJazzCashPayment(orderId, amount) {
+        const response = await fetch('/api/jazzcash-initiate', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ order_id: orderId, amount })
+        });
+
+        if (!response.ok) {
+            let detail = '';
+            try { detail = (await response.json())?.error || ''; } catch { /* ignore */ }
+            throw new Error(detail || `JazzCash initiation failed (${response.status}).`);
+        }
+
+        const { action, fields } = await response.json();
+        if (!action || !fields) {
+            throw new Error('JazzCash initiation returned an unexpected response.');
+        }
+
+        // Build a hidden self-submitting form from the signed fields.
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = action;
+        form.style.display = 'none';
+        Object.entries(fields).forEach(([name, value]) => {
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = name;
+            input.value = value ?? '';
+            form.appendChild(input);
+        });
+        document.body.appendChild(form);
+
+        clearCart();
+        form.submit(); // navigates the browser to JazzCash
     }
 
     function finishOrderFlow() {

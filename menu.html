@@ -150,16 +150,17 @@
             <img src="hero-frames/ezgif-frame-176.jpg" alt="A cup of coffee being poured"
                  class="absolute inset-0 h-full w-full object-cover"/>
         </noscript>
-        <!-- Left-side darkening for text legibility -->
-        <div class="pointer-events-none absolute inset-0 bg-gradient-to-r from-black/75 via-black/25 to-transparent"></div>
+        <!-- Darkening scrim for text legibility: bottom-up on mobile, left-to-right on desktop -->
+        <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent md:bg-gradient-to-r md:from-black/75 md:via-black/25 md:to-transparent"></div>
 
-        <!-- Text overlay — hidden until the pour completes, then fades up on the left -->
-        <div class="absolute inset-0 flex items-center">
+        <!-- Text overlay — hidden until the pour completes, then fades in.
+             Mobile: centred along the bottom. Desktop: left-aligned, vertically centred. -->
+        <div class="absolute inset-0 flex items-end md:items-center pb-20 md:pb-0">
             <div class="w-full max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop">
-                <div id="hero-text" class="max-w-xl opacity-0 translate-y-6 transition-all duration-700 ease-out will-change-transform">
+                <div id="hero-text" class="max-w-xl mx-auto md:mx-0 text-center md:text-left opacity-0 translate-y-6 transition-all duration-700 ease-out will-change-transform">
                     <p class="font-label-lg text-label-lg tracking-[0.25em] text-brand-gold mb-4">BREWED AWAKENING</p>
-                    <h1 class="font-display-lg text-display-lg text-white mb-4 drop-shadow-lg">Our Menu</h1>
-                    <p class="font-body-lg text-body-lg text-white/85 italic max-w-md">Crafted with passion, served with love — every cup poured fresh, just for you.</p>
+                    <h1 class="font-display-lg text-4xl md:text-display-lg text-white mb-4 drop-shadow-lg">Our Menu</h1>
+                    <p class="font-body-lg text-body-lg text-white/85 italic max-w-md mx-auto md:mx-0">Crafted with passion, served with love — every cup poured fresh, just for you.</p>
                 </div>
             </div>
         </div>
@@ -463,6 +464,12 @@
         let currentFrame = -1;
         let ticking = false;
 
+        // On a portrait phone the landscape frame has to be cropped at the sides; a plain
+        // centre crop would push the cup out of view, so bias the crop toward the cup.
+        // Desktop is unaffected (there the frame is width-driven and dw === cw).
+        const mobileQuery = window.matchMedia('(max-width: 767px)');
+        const MOBILE_FOCAL_X = 0.62; // horizontal position of the cup within the frame (0–1)
+
         // Draw one frame with "object-fit: cover" behaviour onto the canvas.
         function draw(index) {
             const img = images[index];
@@ -473,10 +480,19 @@
             const imgRatio = img.naturalWidth / img.naturalHeight;
             const canvasRatio = cw / ch;
             let dw, dh, dx, dy;
-            if (canvasRatio > imgRatio) {      // canvas wider than image → match width
-                dw = cw; dh = cw / imgRatio; dx = 0; dy = (ch - dh) / 2;
-            } else {                            // canvas taller → match height
-                dh = ch; dw = ch * imgRatio; dy = 0; dx = (cw - dw) / 2;
+            if (canvasRatio > imgRatio) {      // canvas wider than image → match width (crop top/bottom)
+                dw = cw; dh = cw / imgRatio;
+            } else {                            // canvas taller → match height (crop the sides)
+                dh = ch; dw = ch * imgRatio;
+            }
+            dy = (ch - dh) / 2;
+            if (mobileQuery.matches && dw > cw) {
+                // Centre the cup on screen instead of the middle of the frame, then clamp
+                // so we never reveal an empty edge.
+                dx = cw * 0.5 - MOBILE_FOCAL_X * dw;
+                dx = Math.min(0, Math.max(cw - dw, dx));
+            } else {
+                dx = (cw - dw) / 2;
             }
             ctx.clearRect(0, 0, cw, ch);
             ctx.drawImage(img, dx, dy, dw, dh);

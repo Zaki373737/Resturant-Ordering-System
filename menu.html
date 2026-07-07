@@ -136,17 +136,37 @@
     </nav>
 </header>
 
-<!-- Hero Section -->
-<section class="relative h-[614px] md:h-[716px] flex items-center justify-center overflow-hidden">
-    <div class="absolute inset-0 z-0">
-        <div class="w-full h-full bg-cover bg-center transition-transform duration-1000 hover:scale-105" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDDDE3xnLiCpnKpXSBgLHj-LeFQGntDTCBVdk4wqfDcY0nNt1_ohuREYiFW-6yYG5cwqJk2SRKw2b5SxAfQjeD2jCsByZlc3z6yrT_YOYf9t_Q2aGHo-KURwoOLokHeSX_4cZAlWjMYbS1NVhQHuxqPqBD0j3lRfpjsSnCeQ9nhg7vOx2WVB40__4kymRTMK39no2EE7OAEle4grC3UnvtVHyoy0cT0tP6dGfMbGilclBDDR55RFaOEvQ')"></div>
-        <div class="absolute inset-0 bg-primary/20 backdrop-brightness-75"></div>
-    </div>
-    <div class="relative z-10 text-center px-margin-mobile md:px-0">
-        <h1 class="font-display-lg text-display-lg text-on-primary mb-4 drop-shadow-lg">Our Menu</h1>
-        <p class="font-body-lg text-body-lg text-on-primary max-w-lg mx-auto opacity-90 italic">Crafted with passion, served with love.</p>
-        <div class="mt-10 animate-bounce">
-            <span class="material-symbols-outlined text-on-primary text-4xl">keyboard_arrow_down</span>
+<!-- Hero Section: scroll-driven coffee-pour sequence -->
+<!-- The tall outer section provides scroll distance; the inner container is sticky and
+     fills the viewport. JS maps scroll progress → frame index (1–176) and reveals the
+     left-hand text over the final frames. Falls back to a static last frame if JS/motion
+     is unavailable. -->
+<section id="hero-scroll" class="relative bg-[#180d06]" style="height:340vh;">
+    <div class="sticky top-0 h-screen w-full overflow-hidden">
+        <!-- Frame canvas -->
+        <canvas id="hero-canvas" class="absolute inset-0 h-full w-full block"></canvas>
+        <!-- No-JS / loading fallback: last frame as a plain image -->
+        <noscript>
+            <img src="hero-frames/ezgif-frame-176.jpg" alt="A cup of coffee being poured"
+                 class="absolute inset-0 h-full w-full object-cover"/>
+        </noscript>
+        <!-- Left-side darkening for text legibility -->
+        <div class="pointer-events-none absolute inset-0 bg-gradient-to-r from-black/75 via-black/25 to-transparent"></div>
+
+        <!-- Text overlay — hidden until the pour completes, then fades up on the left -->
+        <div class="absolute inset-0 flex items-center">
+            <div class="w-full max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop">
+                <div id="hero-text" class="max-w-xl opacity-0 translate-y-6 transition-all duration-700 ease-out will-change-transform">
+                    <p class="font-label-lg text-label-lg tracking-[0.25em] text-brand-gold mb-4">BREWED AWAKENING</p>
+                    <h1 class="font-display-lg text-display-lg text-white mb-4 drop-shadow-lg">Our Menu</h1>
+                    <p class="font-body-lg text-body-lg text-white/85 italic max-w-md">Crafted with passion, served with love — every cup poured fresh, just for you.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scroll cue — fades out as soon as scrolling begins -->
+        <div id="hero-cue" class="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce text-white/80 transition-opacity duration-300">
+            <span class="material-symbols-outlined text-4xl">keyboard_arrow_down</span>
         </div>
     </div>
 </section>
@@ -423,6 +443,93 @@
 
         loadMenuItems();
     });
+</script>
+
+<!-- Hero scroll-driven frame sequence -->
+<script>
+    (function heroScrollSequence() {
+        const section = document.getElementById('hero-scroll');
+        const canvas = document.getElementById('hero-canvas');
+        const heroText = document.getElementById('hero-text');
+        const heroCue = document.getElementById('hero-cue');
+        if (!section || !canvas) return;
+
+        const ctx = canvas.getContext('2d');
+        const FRAME_COUNT = 176;
+        const TEXT_REVEAL_AT = 0.72; // reveal the left-hand text over the last ~28% of frames
+        const framePath = i => `hero-frames/ezgif-frame-${String(i).padStart(3, '0')}.jpg`;
+
+        const images = new Array(FRAME_COUNT);
+        let currentFrame = -1;
+        let ticking = false;
+
+        // Draw one frame with "object-fit: cover" behaviour onto the canvas.
+        function draw(index) {
+            const img = images[index];
+            if (!img || !img.complete || !img.naturalWidth) return;
+            currentFrame = index;
+
+            const cw = canvas.clientWidth, ch = canvas.clientHeight;
+            const imgRatio = img.naturalWidth / img.naturalHeight;
+            const canvasRatio = cw / ch;
+            let dw, dh, dx, dy;
+            if (canvasRatio > imgRatio) {      // canvas wider than image → match width
+                dw = cw; dh = cw / imgRatio; dx = 0; dy = (ch - dh) / 2;
+            } else {                            // canvas taller → match height
+                dh = ch; dw = ch * imgRatio; dy = 0; dx = (cw - dw) / 2;
+            }
+            ctx.clearRect(0, 0, cw, ch);
+            ctx.drawImage(img, dx, dy, dw, dh);
+        }
+
+        // Size the canvas backing store to its CSS box (capped DPR for perf).
+        function resize() {
+            const dpr = Math.min(window.devicePixelRatio || 1, 2);
+            canvas.width = Math.round(canvas.clientWidth * dpr);
+            canvas.height = Math.round(canvas.clientHeight * dpr);
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+            draw(currentFrame < 0 ? 0 : currentFrame);
+        }
+
+        function update() {
+            ticking = false;
+            const scrollable = section.offsetHeight - window.innerHeight;
+            const progress = scrollable > 0
+                ? Math.min(1, Math.max(0, -section.getBoundingClientRect().top / scrollable))
+                : 0;
+
+            const frame = Math.min(FRAME_COUNT - 1, Math.round(progress * (FRAME_COUNT - 1)));
+            draw(frame);
+
+            // Reveal text on the left once the pour is nearly complete.
+            if (heroText) {
+                const revealed = progress >= TEXT_REVEAL_AT;
+                heroText.style.opacity = revealed ? '1' : '0';
+                heroText.style.transform = revealed ? 'translateY(0)' : 'translateY(24px)';
+            }
+            // Hide the scroll cue as soon as the user starts scrolling.
+            if (heroCue) heroCue.style.opacity = progress > 0.03 ? '0' : '1';
+        }
+
+        function onScroll() {
+            if (!ticking) { ticking = true; requestAnimationFrame(update); }
+        }
+
+        // Preload every frame. Frame 1 kicks off the first paint; each new load refreshes
+        // the current frame in case the user is already scrolling while images arrive.
+        for (let i = 1; i <= FRAME_COUNT; i++) {
+            const img = new Image();
+            const idx = i - 1;
+            img.onload = () => { if (idx === currentFrame || currentFrame < 0) update(); };
+            img.src = framePath(i);
+            images[idx] = img;
+        }
+
+        resize();
+        update();
+        window.addEventListener('scroll', onScroll, { passive: true });
+        window.addEventListener('resize', () => { resize(); update(); });
+    })();
 </script>
 </body>
 </html>
